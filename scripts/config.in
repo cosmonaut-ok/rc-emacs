@@ -1,0 +1,106 @@
+#!/bin/bash
+
+WGET=`which wget` 
+TMP="$(mktemp -d /tmp/.inst_el.XXX)"
+ME=`readlink -f $0`
+DST="$(dirname $(dirname $ME))/lib/"
+TAR=`which tar`
+UZIP=`which unzip`
+RM=`which rm`
+MKDIR=`which mkdir`
+
+$MKDIR -p $TMP
+
+VERBOSEP=0
+[ ! -z "$2" -a "$2" == '-v' ] && VERBOSEP=1
+[ ! -z "$2" -a "$2" == '-vv' ] && VERBOSEP=2
+[ ! -z "$2" -a "$2" == '-vvv' ] && VERBOSEP=3
+
+maybe_fail()
+{
+    local code=$1
+    if [ $code -eq 0 ]; then
+	[ $VERBOSEP -ge 1 ] && echo "[ DONE ]"
+	return 0
+    else
+	[ $VERBOSEP -ge 1 ] && echo "[ FAILED ]"
+	exit $code
+    fi
+}
+
+get_url_with_name() # args: what, from_where
+# args: $name $url dst_file
+{
+    local file=$1
+    local url=$2
+    local wget_verb='-nv -q'
+    local code=0
+    ###
+    [ $VERBOSEP -ge 1 ] && echo -n "Getting \`\`$file'' from $(echo $url | cut -d'/' -f3)..."
+    [ $VERBOSEP -ge 2 ] && echo
+    [ $VERBOSEP -ge 2 ] && wget_verb='-nv'
+    [ $VERBOSEP -eq 3 ] && wget_verb='-v'
+    $WGET $wget_verb $url -O $TMP/$file
+    maybe_fail $?
+}
+
+copy_to_local() # args: what (related path), where (related path)
+{
+    local package=$TMP/${1}
+    local destination=$DST/$2
+    local code=0
+    ###
+    [ $VERBOSEP -ge 1 ] && echo -n "Installing \`\`$1'' to \`\`$destination''..."
+    [ $VERBOSEP -ge 2 ] && echo
+    [ $VERBOSEP -ge 2 ] && local mkdir_v='v'
+    [ -d $destination ] || $MKDIR -p $destination
+    cp -rfn${mkdir_v} $package $destination
+    maybe_fail $?
+}
+
+
+extract()
+{
+    local z_quiet=''
+    local tar_quiet=''
+    [ $VERBOSEP -le 1 ] && local local z_quiet='-q'
+    [ $VERBOSEP -eq 3 ] && local z_quiet='-v'
+    [ $VERBOSEP -eq 3 ] && local tar_quiet='v'
+    if [ -z "$1" ]; then
+	# display usage if no parameters given
+	echo "Bad file $1"
+	echo "Usage: extract <file_name>.<zip|rar|bz2|gz|tar|tbz2|tgz|Z|7z|xz|ex|tar.bz2|tar.gz|tar.xz>"
+	maybe_fail 1
+    else
+	cd $TMP
+	if [ -f "$1" ] ; then
+            NAME=${1%.*}
+            #mkdir $NAME && cd $NAME
+	    local _pwd=$PWD
+	    [ $VERBOSEP -ge 1 ] && echo -n "Extracting $NAME..."
+            case "$1" in
+		*.tar.bz2)   tar x${tar_quiet}jf ./"$1"; maybe_fail $?     ;;
+		*.tar.gz)    tar x${tar_quiet}zf ./"$1"; maybe_fail $?     ;;
+		*.tar.xz)    tar x${tar_quiet}Jf ./"$1"; maybe_fail $?     ;;
+		*.lzma)      unlzma $z_quiet ./"$1"; maybe_fail $?         ;;
+ 		*.bz2)       bunzip2 $z_quiet ./"$1"; maybe_fail $?        ;;
+		*.rar)       unrar x -ad${tar_quiet} ./"$1"; maybe_fail $? ;;
+		*.gz)        gunzip $z_quiet ./"$1"; maybe_fail $?         ;;
+		*.tar)       tar x${tar_quiet}f ./"$1"; maybe_fail $?      ;;
+		*.tbz2)      tar x${tar_quiet}jf ./"$1"; maybe_fail $?     ;;
+		*.tgz)       tar x${tar_quiet}zf ./"$1"; maybe_fail $?     ;;
+		*.zip)       unzip $z_quiet ./"$1"; maybe_fail $?          ;;
+		*.Z)         uncompress $z_quiet ./"$1"; maybe_fail $?     ;;
+		*.7z)        7z x -y ./"$1"; maybe_fail $?                 ;;
+		*.xz)        unxz $z_quiet ./"$1"; maybe_fail $?           ;;
+		*.exe)       cabextract $z_quiet ./"$1"; maybe_fail $?     ;;
+		*)           echo "extract: '$1' - unknown archive method" ;;
+            esac
+	else
+            echo -n "'$1' - file does not exist"
+	    maybe_fail 1
+	    [ $VERBOSEP -eq 0 ] && echo
+	fi
+	cd $_pwd
+    fi
+}

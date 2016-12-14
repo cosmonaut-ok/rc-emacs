@@ -1,0 +1,116 @@
+# Makefile.in --- Makefile template  -*- Makefile -*-
+
+# Copyright (C) 2016 Alexander aka 'CosmonauT' Vynnyk
+
+# Maintainer: cosmonaut.ok@zoho.com
+# Keywords: internal
+# Package: cosmonaut
+
+# This file is part of Restaurant.
+
+# Restaurant is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+
+# Restaurant is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+
+# You should have received a copy of the GNU General Public License
+# along with Restaurant.  If not, see <http://www.gnu.org/licenses/>.
+
+# Commentary:
+
+# TODO:
+
+# Code:
+
+EMACS_URI=@EMACS_URI@
+BUILD_DIR=@BUILD_DIR@
+ARCHIVE_NAME=$(shell basename ${EMACS_URI})
+
+## f*king github with its name conventions!
+SOURCE_DIR=emacs-$(shell basename ${EMACS_URI} .tar.gz)
+RUBY=$(shell which ruby)
+BUNDLE=$(shell which bundle)
+RVM=$(shell which rvm)
+EMACS_BIN=emacs
+CURRENT_DIR=$(shell pwd)
+
+all: build clean
+
+el-get:
+ifeq (@STATIC@, yes)
+	@echo "Static build enabled. Getting prepared el-get libraries..."
+	@tar -xf el-get_bck.tar.gz
+else
+	@echo "Getting required dependencies via el-get..."
+	@${EMACS_BIN} -Q --debug-init --script ./src/bootstrap.el
+	@cd ${CURRENT_DIR}/el-get/yasnippets && ln -s ruby-mode enh-ruby-mode
+endif
+
+lib:
+	@echo "Building 3rd party libraries..."
+	@mkdir -p lib
+	@cd scripts && for i in `ls *.sh | grep -v tmpl.sh`; do \
+		/bin/bash $$i install -v; \
+	done
+ifeq (@BYTE_COMPILE_P@, yes)
+	@for i in `find lib -type f -name '*.el'`; do \
+		${EMACS_BIN} -Q -batch --eval "(byte-compile-file \"$$i\")"; \
+	done
+endif
+
+build: el-get lib
+	@echo "Building cosmonaut..."
+	@${EMACS_BIN} -Q -batch --script ./init.el
+	@touch build
+
+install:
+	@echo Not implemented
+
+clean-precompile:
+	@echo "Cleaning precompiled elc files..."
+	@rm -f src/*.elc
+	@[ -d lib ] && find lib -type f -name '*.elc' -delete || true
+
+clean-lib:
+	@echo "Removing lib directory..."
+	@rm -rf lib
+
+clean-3rdparty:
+	@echo "Removing 3rd-party libs..."
+	@rm -rf el-get elpa
+
+clean: clean-precompile
+	@echo "Clearing working directory..."
+	@rm -rf autom4te.cache config.log conf18498.dir config.status
+	@find . -type f -name '*~' -delete
+	@find . -type f -name '*#$$' -delete
+	@find . -type f -name '*^#*' -delete
+
+mrproper: clean clean-3rdparty clean-lib
+	@echo "Clearing all..."
+	@rm -rf build configure Makefile Gemfile.lock ${ARCHIVE_NAME} cosmonaut build Restaurant.desktop
+	@rm -rf ${BUILD_DIR}/data/icons/hicolor/
+
+test: build
+	@touch /tmp/.cosmonaut-mock.rb
+	@./cosmonaut --batch /tmp/.cosmonaut-mock.rb || exit 1
+	@rm -f /tmp/.cosmonaut-mock.rb
+
+help:
+	@echo "Restaurant Chef IDE v. ${RESTAURANT_VERSION}"
+	@echo "Options:"
+	@echo "       all targets: $(shell cat Makefile | grep -E '^[a-z].*\:' | cut -d: -f1| tr ":" " ")"
+	@echo
+	@echo "       most important targets:"
+	@echo "       build       - build cosmonaut (w/o emacs. Just bootstrap)"
+	@echo "       install     - install cosmonaut (not implemented yet. Just local usage)"
+	@echo "       emacs       - build emacs locally to work with cosmonaut"
+	@echo "       release     - perform completely building and packaging cosmonaut"
+	@echo "       clean       - clean working directory from unndeded files"
+	@echo "       mrproper    - perform fully cleaning. Leaving only files, required for"
+	@echo "                     building cosmonaut (Restaurant will not works after that)"

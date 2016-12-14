@@ -1,0 +1,31 @@
+case $1 in
+    "install")
+        [ $VERBOSEP -ge 1 ] && echo "Installing packages from $0..."
+        pkg_install
+        status=$?
+	if [ $status -eq 0 ]; then
+	    [ $VERBOSEP -ge 1 ] && echo "$0 [ INSTALLED ]"
+	else
+	    [ $VERBOSEP -ge 1 ] && echo "$0 [ FAILED TO INSTALL ]"
+	    exit 1
+	fi
+	;;
+    "update")
+        [ $VERBOSEP -ge 1 ] && echo "Updating packages from $0..."
+        pkg_update
+        status=$?
+	if [ $status -eq 0 ]; then
+	    [ -z $VERBOSEP ] || echo "$0 [ UPDATED ]"
+	else
+	    [ -z $VERBOSEP ] || echo "$0 [ FAILED TO UPDATE ]"
+	    exit 1
+	fi
+	;;
+    *)
+	echo "Not implemented"
+	;;
+esac
+
+## removing temporary installation directory, if needed
+[ $VERBOSEP -ge 2 ] && rm_verb='v'
+[ -d $TMP ] && $RM -rf${rm_verb} $TMP
