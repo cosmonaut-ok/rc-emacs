@@ -60,7 +60,7 @@ session.*
 auto-save-list
 backups
 ac-comphist.dat
-el-get
+el-get/
 el-get-user
 elpa
 ido.last
@@ -96,7 +96,6 @@ autom4te.cache
 config.status
 configure
 build
-*.tar.gz
 Makefile
 *.elc
 data/icons/hicolor/

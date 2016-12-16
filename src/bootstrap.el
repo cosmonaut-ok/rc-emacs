@@ -110,6 +110,7 @@
     "slime"
     "slime-company"
     "slime-annot"
+    "redshank"
     ;; notifications support
     "notify"
     ;; fun
