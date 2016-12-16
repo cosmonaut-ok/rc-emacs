@@ -98,6 +98,5 @@ configure
 build
 Makefile
 *.elc
-data/icons/hicolor/
 README.html
 
