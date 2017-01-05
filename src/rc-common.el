@@ -337,7 +337,8 @@
 ;;;
 (defhooklet cosmonaut/indent-level prog-mode t
   (custom-set-variables
-   '(standard-indent cosmonaut/indent-level)))
+   '(standard-indent cosmonaut/indent-level)
+   '(indent-tabs-mode nil)))
 
 ;;;
 ;;; ssh
