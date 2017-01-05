@@ -55,7 +55,14 @@
  '(make-backup-files cosmonaut/autobackup)
  '(use-backup-dir cosmonaut/autobackup) ;use backup directory
  '(version-control t) ;; Enable versioning with default values (keep five last versions, I think!)
+ '(backup-by-copying t)
  '(delete-old-versions t)
+ '(backup-directory-alist
+   `((".*" . ,cosmonaut/backup-directory))) ; don't litter my fs tree
+ '(auto-save-file-name-transforms
+   `((".*" ,cosmonaut/backup-directory t)))
+ `(auto-save-interval ,cosmonaut/autobackup-interval)
+ ;; other
  '(query-replace-highlight t)           ;highlight during query
  '(search-highlight t)                  ;highlight incremental search
  '(ls-lisp-dirs-first t)                ;display dirs first in dired
@@ -78,9 +85,6 @@
 
 (defhooklet cosmonaut/cua-mode prog-mode cosmonaut/familiar-copy-paste-cut
   (cua-mode t))
-
-;;;; Enable Drag stuff
-(drag-stuff-global-mode 1)
 
 ;;;; Sync linux and eamcs clipboards
 ;; after copy Ctrl+c in Linux X11, you can paste by `yank' in emacs
@@ -149,12 +153,17 @@
 ;; https://github.com/magnars/.emacs.d/blob/master/settings/setup-ido.el
 (require 'ido)
 (require 'ido-vertical-mode)
+(require 'ido-completing-read+)
+;;
 (ido-mode 1)
 (ido-vertical-mode 1)
-(setq ido-vertical-show-count t)
 (ido-better-flex/enable)
-(setq ido-enable-flex-matching t)
-(setq ido-vertical-define-keys 'C-n-C-p-up-and-down)
+
+(custom-set-variables
+ '(ido-vertical-show-count t)
+ '(ido-enable-flex-matching t)
+ '(ido-vertical-define-keys 'C-n-C-p-up-and-down)
+ )
 
 (global-set-key "\M-x" (lambda ()
 			 (interactive)
@@ -162,42 +171,13 @@
 						      "M-x " (all-completions "" obarray 'commandp))))))
 
 ;; set ido-completing-read as default completing function
+(setq ido-cr+-replace-completely t)
 (setq-default completing-read-function 'ido-completing-read)
-
-;;;; TODO: temporary disabled during some emacs bug
-;; (defvar ido-enable-replace-completing-read t
-;;   "If t, use ido-completing-read instead of completing-read if possible.
-    
-;;     Set it to nil using let in around-advice for functions where the
-;;     original completing-read is required.  For example, if a function
-;;     foo absolutely must use the original completing-read, define some
-;;     advice like this:
-    
-;;     (defadvice foo (around original-completing-read-only activate)
-;;       (let (ido-enable-replace-completing-read) ad-do-it))")
-
-;; ;; Replace completing-read wherever possible, unless directed otherwise
-;; (defadvice completing-read
-;;     (around use-ido-when-possible activate)
-;;   (if (or (not ido-enable-replace-completing-read) ; Manual override disable ido
-;; 	  (and (boundp 'ido-cur-list)
-;; 	       ido-cur-list)) ; Avoid infinite loop from ido calling this
-;;       ad-do-it
-;;     (let ((allcomp (all-completions "" collection predicate)))
-;;       (if allcomp
-;; 	  (setq ad-return-value
-;; 		(ido-completing-read prompt
-;; 				     allcomp
-;; 				     nil require-match initial-input hist def))
-;; 	ad-do-it))))
-
-;; ;; I found ido-completing-read to interfere when using dired mode buffers (e.g., renaming files). To turn it off
-(add-hook 'dired-mode-hook
-	  '(lambda () (setq ido-enable-replace-completing-read nil)))
 
 ;;;; If we read a compressed file, uncompress it on the fly:
 ;;;; (this works with .tar.gz and .tgz file as well)
-(setq auto-compression-mode 1)
+(custom-set-variables
+ '(auto-compression-mode 1))
 
 ;;;; fill-column
 (defun cosmonaut/fill-column ()
@@ -209,9 +189,6 @@
 ;;;; Uniquify buffers
 (require 'uniquify)
 (setq uniquify-buffer-name-style 'reverse)
-
-;; ;; WAT
-;; (setq stack-trace-on-error nil)
 
 ;;;
 ;;; Prog mode configuration
@@ -242,7 +219,9 @@
   (font-lock-mode 1)
   ;; Drag and move selcted
   (drag-stuff-mode 1)
-
+  ;; set global indent-tabs-mode
+  (setq indent-tabs-mode cosmonaut/indent-tabs-mode)
+  
   (local-set-key (kbd "C-c C-f") 'flash-cross)
   (local-set-key (kbd "RET") 'newline-and-indent)
 
@@ -369,6 +348,13 @@
   (setq dirtrackp nil))
 
 ;;;
+;;; Ediff customizations
+;;;
+(setq ediff-ignore-similar-regions t)
+(setq ediff-use-last-dir t)
+(setq ediff-diff-options " -b ")
+
+;;;
 ;;; common compilation options
 ;;;
 
@@ -398,5 +384,19 @@
 			 ("org" . "http://orgmode.org/elpa/")))
 
 (package-initialize)
+
+;;;
+;;; automatically remove old backups
+;;;
+(when cosmonaut/clear-autobackups
+  (message "Deleting old backup files...")
+  (let ((week (* 60 60 24 7))
+	(current (float-time (current-time))))
+    (dolist (file (directory-files temporary-file-directory t))
+      (when (and (backup-file-name-p file)
+		 (> (- current (float-time (fifth (file-attributes file))))
+		    week))
+	(message "%s" file)
+	(delete-file file)))))
 
 ;;; cosmonaut-common.el ends here

@@ -193,9 +193,9 @@
 (add-to-list 'auto-mode-alist '("\\.lisp$" . lisp-mode))
 (add-to-list 'auto-mode-alist '("\\.asd$" . lisp-mode))
 
-(defun cosmonaut/lisp-mode-hook ()
-  (slime-mode 1)
-  ;; (setq indent-tabs-mode t)
+(defhooklet cosmonaut/lisp-generic (lisp-mode lisp-interaction-mode) t
+  ;; (slime-mode 1)
+  (setq indent-tabs-mode cosmonaut/indent-tabs-mode)
   (abbrev-mode 1)
   ;; (yafolding-mode 1) ;; TODO: do we need a folding mode?
   (turn-on-eldoc-mode)
@@ -218,7 +218,7 @@
 ;; lisp-mode hook
 
 ;; There is no prog-mode in emacs23
-(add-hook 'lisp-mode-hook 'cosmonaut/lisp-mode-hook)
-(add-hook 'lisp-interaction-mode-hook 'cosmonaut/lisp-mode-hook)
+;; (add-hook 'lisp-mode-hook 'cosmonaut/lisp-mode-hook)
+;; (add-hook 'lisp-interaction-mode-hook 'cosmonaut/lisp-mode-hook)
 ;; (add-hook 'lisp-interaction-mode-hook 'init-prog-mode)
 

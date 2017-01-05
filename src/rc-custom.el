@@ -107,7 +107,19 @@
   :group 'cosmonaut/backup
   )
 
-(defcustom cosmonaut/backup-directory (concat cosmonaut/user-config-directory "/backups")
+(defcustom cosmonaut/clear-autobackups nil
+  "Clear old autobackup files during startup."
+  :type 'boolean
+  :group 'cosmonaut/backup
+  )
+
+(defcustom cosmonaut/autobackup-interval 300
+  "Set interval between autobackups."
+  :type 'integer
+  :group 'cosmonaut/backup
+  )
+
+(defcustom cosmonaut/backup-directory (locate-user-data-file "backups/")
   "Enable backups." ;; FIXME: not working yet
   :type 'directory
   :group 'cosmonaut/backup
