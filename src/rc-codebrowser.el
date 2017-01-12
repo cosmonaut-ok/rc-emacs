@@ -207,4 +207,8 @@ little more place."
 				       (sr-speedbar-open)
 				     (call-interactively 'ecb-activate)))))
 
+;; Rebuild ECB methods buffer
+(defhooklet cosmonaut/rebuild-ecb-buffer before-save t
+  (ecb-rebuild-methods-buffer))
+
 ;;;;; config-ecb.el ends here ---

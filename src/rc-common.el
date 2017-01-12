@@ -123,6 +123,12 @@
  '(semanticdb-default-save-directory (locate-user-cache-file "cosmonaut-semanticdb"))
  '(srecode-map-save-file (locate-user-cache-file "cosmonaut-srecode-map.el")))
 
+;; set semantic/imenu buffer autorescan
+(custom-set-variables
+ '(imenu-auto-rescan t))
+(global-semanticdb-minor-mode 1)
+(global-semantic-idle-scheduler-mode 1)
+
 ;;;; Column & line numbers in mode bar
 (column-number-mode t)
 (line-number-mode t)

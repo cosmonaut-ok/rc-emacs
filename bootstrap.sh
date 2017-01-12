@@ -2,7 +2,7 @@
 
 set -e
 
-if [ ! -z $1 ]; then
+if [ -n $1 ]; then
     RUBY_VERSION=$1
 else
     RUBY_VERSION=2.2
@@ -35,10 +35,8 @@ bootstrap_with_packages ()
     su_cmd="su -c"
         
     case $os in
-	Debian|Ubuntu)
+	Debian|Ubuntu|Devuan)
 	    echo "installing required packages"
-	    echo sudo: $sudo_cmd
-	    echo su  : $su_cmd
 	    
 	    if [ -n "$sudo_cmd" ]; then
 		$sudo_cmd apt-get -y install $(for i in $REQUIRED_PACKAGES; do echo $i|cut -d, -f2; done)
@@ -56,8 +54,14 @@ bootstrap_with_packages ()
 	    ;;
 	*)
 	    for i in $REQUIRED_PACKAGES; do
-		if [ -z "$(which $i)" ]; then
-		    print_message You must install package \"$i\" firstly
+		local is=""
+		for k in $(echo $i | sed 's/\,/\ /g'); do
+		    if [ ! -z "$(which $k)" ]; then
+			is="true"
+		    fi
+		done
+		if [ -z $is ]; then
+		    print_message You must install package \"$k\" firstly
 		    exit 1
 		fi
 	    done
