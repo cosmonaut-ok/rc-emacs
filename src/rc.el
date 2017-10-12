@@ -16,7 +16,7 @@
     "ruby" "rspec" "chef" "kitchen" "bundler" "berkshelf"
     "foodcritic" "rvm" "codebrowser" "markdown"
     "yaml" "json" "web" "erb" "fly" "popup-menu"
-    "lisp" "makefile" "org" "tex"
+    "lisp" "c-pp" "makefile" "org" "tex"
     "shell-script" "menubar" "toolbar" "theme"
     "help"))
 

@@ -47,11 +47,4 @@
   (interactive "P")
   (print (flycheck-get-checker-for-buffer)))
 
-;;;
-;;; flymake
-;;;
-(defhooklet cosmonaut/flymake prog-mode cosmonaut/enable-flymake
-  (require 'flymake)
-  (flymake-mode 1))
-
 ;;; cosmonaut-fly.el ends here

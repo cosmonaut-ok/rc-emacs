@@ -67,6 +67,10 @@
     "company-inf-ruby"
     "company-quickhelp"
     "company-web"
+    ;; c/c++
+    "ggtags"
+    "company-c-headers"
+    "clean-aindent"
     ;; markdown
     "markdown-mode"
     "markdown-preview-mode"
@@ -111,6 +115,8 @@
     "slime-company"
     "slime-annot"
     "redshank"
+    ;; c/c++
+    "use-package"
     ;; notifications support
     "notify"
     ;; fun
@@ -175,7 +181,7 @@
   (init-el-get-packages)
   (message "...Getting el-get packages [ DONE ]")
   (write-region "" nil cosmonaut/packages-installed-p))
-   
+
 
 ;;; Add 3rd party projects
 (let ((default-directory (concat cosmonaut/source-directory "lib/")))
