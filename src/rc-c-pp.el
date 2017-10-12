@@ -43,6 +43,7 @@
 
 (defhooklet cosmonaut/c-pp-init (c-mode-common c-mode c++-mode) t
   (hs-minor-mode 1)
+  (paredit-mode 1)
   (c-set-style "bsd") ;; see below
   (setq c-basic-offset 2
 	tab-width 2	; default to 4 visible spaces to display a tab
