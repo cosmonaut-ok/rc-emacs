@@ -36,6 +36,7 @@
 ;; (require 'github-notifier)
 ;; (require 'popup)
 (require 'ssh)
+(require 'semantic)
 
 ;;;
 ;;; Global config
@@ -225,11 +226,8 @@
   (font-lock-mode 1)
   ;; Drag and move selcted
   (drag-stuff-mode 1)
-  ;; set global indent-tabs-mode
-  (setq indent-tabs-mode cosmonaut/indent-tabs-mode)
   
   (local-set-key (kbd "C-c C-f") 'flash-cross)
-  (local-set-key (kbd "RET") 'newline-and-indent)
 
   (message "Prog mode enabled. USE Shift+SPACE to show or hide blocks"))
 
@@ -339,12 +337,15 @@
   (setq require-final-newline 1))
 
 ;;;
-;;; indent-level
+;;; indent options
 ;;;
-(defhooklet cosmonaut/indent-level prog-mode t
+(defhooklet cosmonaut/indent prog-mode t
   (custom-set-variables
    '(standard-indent cosmonaut/indent-level)
-   '(indent-tabs-mode nil)))
+     ;; set global indent-tabs-mode
+   '(indent-tabs-mode cosmonaut/indent-tabs-mode)
+   )
+  (local-set-key (kbd "RET") 'newline-and-indent))
 
 ;;;
 ;;; ssh

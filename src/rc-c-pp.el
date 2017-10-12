@@ -43,6 +43,10 @@
 
 (defhooklet cosmonaut/c-pp-init (c-mode-common c-mode c++-mode) t
   (hs-minor-mode 1)
+  (c-set-style "bsd") ;; see below
+  (setq c-basic-offset 2
+	tab-width 2	; default to 4 visible spaces to display a tab
+	indent-tabs-mode t)
   ;; GROUP: Editing -> Editing Basics
   (custom-set-variables
    '(global-mark-ring-max 5000)	; increase mark ring to contains 5000 entries
@@ -85,9 +89,6 @@
 
 (defhooklet cosmonaut/c-pp-company (c-mode-common c-mode c++-mode) t
   (add-to-list 'company-backends 'company-c-headers))
-
-(define-key c-mode-map  [(tab)] 'company-complete)
-(define-key c++-mode-map  [(tab)] 'company-complete)
 
 ;; (set-terminal-coding-system 'utf-8)
 ;; (set-keyboard-coding-system 'utf-8)
@@ -330,13 +331,9 @@
 
 (defhooklet cosmonaut/c-pp-flycheck (c-mode-common c-mode c++-mode) t
   (custom-set-variables
-   '(flycheck-gcc-include-path ,default-directory)
-   '(flycheck-cpp-include-path ,default-directory)
-   )
-  )
+   `(flycheck-gcc-include-path '(,default-directory))))
 
 ;; company
-
 (delete 'company-semantic company-backends)
 ;; (define-key c-mode-map  [(control tab)] 'company-complete)
 ;; (define-key c++-mode-map  [(control tab)] 'company-complete)
