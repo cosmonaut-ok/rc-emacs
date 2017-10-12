@@ -132,7 +132,7 @@
 			(when ,condition
 			  (verbose-message "Launching ``%s'' hooklet on ``%s'' mode" ',name ',(car mode))
 			  ,@body)))
-	    (defhooklet ,name ,(cdr mode) ,condition ,body)))))
+	    (defhooklet ,name ,(cdr mode) ,condition ,@body)))))
 
 (defun cosmonaut/enable-verbose-messages ()
   (interactive)
