@@ -76,17 +76,6 @@
 (add-hook 'minibuffer-setup-hook '(lambda ()
                                    (visual-line-mode -1)))
 
-;;;; enable cua mode
-(defhooklet cosmonaut/cua-mode emacs-startup cosmonaut/familiar-copy-paste-cut
-  ;; https://www.emacswiki.org/emacs/CuaMode
-  (cua-mode t))
-
-(defhooklet cosmonaut/cua-mode test-mode cosmonaut/familiar-copy-paste-cut
-  (cua-mode t))
-
-(defhooklet cosmonaut/cua-mode prog-mode cosmonaut/familiar-copy-paste-cut
-  (cua-mode t))
-
 ;;;; Sync linux and eamcs clipboards
 ;; after copy Ctrl+c in Linux X11, you can paste by `yank' in emacs
 (setq x-select-enable-clipboard t)
@@ -226,7 +215,9 @@
   (font-lock-mode 1)
   ;; Drag and move selcted
   (drag-stuff-mode 1)
-  
+  ;;
+  (require 'highlight-symbol)
+  (highlight-symbol-mode 1)
   (local-set-key (kbd "C-c C-f") 'flash-cross)
 
   (message "Prog mode enabled. USE Shift+SPACE to show or hide blocks"))
