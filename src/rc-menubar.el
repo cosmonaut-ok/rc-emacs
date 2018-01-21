@@ -45,7 +45,7 @@
 (define-key global-map [menu-bar tools compile] nil)
 (define-key global-map [menu-bar tools semantic] nil)
 (define-key global-map [menu-bar tools ede] nil)
-;; (define-key global-map [menu-bar tools Projectile] nil)
+(define-key global-map [menu-bar tools Projectile] nil)
 (define-key global-map [menu-bar tools separator-prog] nil)
 (define-key global-map [menu-bar tools Color\ Themes] nil)
 (define-key global-map [menu-bar tools Start\ Code\ Browser\ \(ECB\)] nil)
@@ -364,6 +364,65 @@
 (define-key global-map
   [menu-bar options cosmonaut-reinit]
   '("Reload Cosmonaut configuration" . reinit))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; Project
+;;;
+(define-key prog-mode-map
+  [menu-bar project]
+  (cons "Project" (make-sparse-keymap "Project")))
+
+(define-key prog-mode-map
+  [menu-bar project project-separator-1]
+  '("--" nil :visible))
+
+(define-key prog-mode-map
+  [menu-bar project grep-in-project]
+  '("Search String In Project" . projectile-grep))
+;; (Search\ in\ project\ \(grep\) menu-item "Search in project (grep)" projectile-grep)
+
+(define-key prog-mode-map
+  [menu-bar project replace-in-project]
+  '("Replace String In Project" . projectile-replace))
+;; (Replace\ in\ project menu-item "Replace in project" projectile-replace)
+
+(define-key prog-mode-map
+  [menu-bar project find-file-in-project]
+  '("Find File In Project" . projectile-find-file))
+;; (Find\ file menu-item "Find file" projectile-find-file)
+
+(define-key prog-mode-map
+  [menu-bar project jump-between-file-and-test]
+  '("Jump Between" . projectile-find-file))
+;; (Jump\ between\ implementation\ file\ and\ test\ file menu-item "Jump between implementation file and test file" projectile-toggle-between-implementation-and-test)
+
+(define-key prog-mode-map
+  [menu-bar project find-test-file-in-project]
+  '("Find Test File In Project" . projectile-find-test-file))
+;; (Find\ test\ file menu-item "Find test file" projectile-find-test-file)
+
+;; (Switch\ to\ buffer menu-item "Switch to buffer" projectile-switch-to-buffer)
+
+(define-key prog-mode-map
+  [menu-bar project close-project]
+  '("Close Project" . projectile-kill-buffers))
+;; (Kill\ project\ buffers menu-item "Kill project buffers" projectile-kill-buffers)
+
+;; (Compile\ project menu-item "Compile project" projectile-compile-project)
+
+;; (Test\ project menu-item "Test project" projectile-test-project)
+
+;; (Run\ project menu-item "Run project" projectile-run-project)
+
+;; (Project\ info menu-item "Project info" projectile-project-info)
+
+
+;; (Run\ shell menu-item "Run shell" projectile-run-shell)
+;; (Run\ eshell menu-item "Run eshell" projectile-run-eshell)
+
+;; (Switch\ to\ project menu-item "Switch to project" projectile-switch-project)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;

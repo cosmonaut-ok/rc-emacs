@@ -95,6 +95,7 @@
     ;; "magit-gh-pulls" moved to scripts
     "fill-column-indicator"
     "highlight-parentheses"
+    "highlight-symbol"
     "col-highlight"
     "flycheck"
     "flycheck-pos-tip"
