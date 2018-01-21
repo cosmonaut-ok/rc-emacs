@@ -43,11 +43,8 @@
 
 (defhooklet cosmonaut/c-pp-init (c-mode-common c-mode c++-mode) t
   (hs-minor-mode 1)
-  (paredit-mode 1)
+  (paredit-mode 0)
   (c-set-style "bsd") ;; see below
-  (setq c-basic-offset 2
-	tab-width 2	; default to 4 visible spaces to display a tab
-	indent-tabs-mode t)
   ;; GROUP: Editing -> Editing Basics
   (custom-set-variables
    '(global-mark-ring-max 5000)	; increase mark ring to contains 5000 entries
@@ -58,7 +55,7 @@
    '(mode-require-final-newline t)      ; add a newline to end of file
    '(c-basic-offset 2)
    '(tab-width 2)	; default to 4 visible spaces to display a tab
-   '(indent-tabs-mode t)
+   '(indent-tabs-mode nil)
    '(gc-cons-threshold 100000000)
    '(show-trailing-whitespace 1)
    ;;
