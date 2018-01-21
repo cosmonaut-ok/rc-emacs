@@ -45,6 +45,9 @@
   (hs-minor-mode 1)
   (paredit-mode 0)
   (c-set-style "bsd") ;; see below
+  (setq c-basic-offset 2
+	tab-width 2     ; default to 4 visible spaces to display a tab
+	indent-tabs-mode nil)
   ;; GROUP: Editing -> Editing Basics
   (custom-set-variables
    '(global-mark-ring-max 5000)	; increase mark ring to contains 5000 entries
