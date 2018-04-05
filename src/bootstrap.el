@@ -111,6 +111,7 @@
     "ido-better-flex"
     "drag-stuff" ;; move lines/regions up/down
     "ssh"
+    "terraform-mode"
     ;; lisp
     "slime"
     "slime-company"
