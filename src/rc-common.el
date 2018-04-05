@@ -399,4 +399,10 @@
 	(message "%s" file)
 	(delete-file file)))))
 
+;;;
+;;; octave mode for matlab files
+;;;
+(add-to-list 'auto-mode-alist '("\\.m\\'" . octave-mode))
+(autoload 'run-octave "octave-inf" nil t)
+
 ;;; cosmonaut-common.el ends here
