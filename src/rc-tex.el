@@ -16,19 +16,93 @@
 ;; ;; ;;         (concat (getenv "TEXINPUTS")
 ;; ;; ;;                 ":/home/ott/tex/styles//:/home/ott/projects/fprog/journal-issues/class//"))
 
-(require 'tex-site)
-(setq-default TeX-master (locate-source-file "share/master"))
-(setq TeX-parse-self t)
-(setq TeX-auto-save t)
-(setq TeX-save-query nil)
-;; ;; (setq TeX-default-mode 'latex-mode)
-(setq TeX-open-quote "``")
-(setq TeX-close-quote "''")
-;; (setq TeX-PDF-mode t)
+;; (defhooklet cosmonaut/ruby-indent (enh-ruby-mode ruby-mode) t
+
+;; (defvar system-auctex-styles (locate-source-file "el-get/auctex/style/"))
+;; (defvar local-auctex-styles (locate-source-file "style/"))
+;; (defvar project-auctex-styles nil)
+
+(defhooklet cosmonaut/texlatex (tex-mode latex-mode LaTeX-mode) t
+  (require 'tex-site)
+  (require 'preview-latex)
+  (require 'company-auctex)
+  (require 'latex-preview-pane)
+  ;; (require 'flymake)
+
+  (autoload 'cdlatex-mode "cdlatex" "CDLaTeX Mode" t)
+  (autoload 'turn-on-cdlatex "cdlatex" "CDLaTeX Mode" nil)
+
+  ;; create auto lisp directory
+  (dolist (v (append TeX-auto-private TeX-style-private))
+    (when (not (file-directory-p v))
+      (mkdir v t)))
+
+  (turn-on-cdlatex)
+  (local-unset-key (kbd "<tab>"))
+  (local-unset-key (kbd "TAB"))
+  (local-set-key "<tab>" 'cdlatex-tab)
+
+  ;; (flymake-mode 1)
+  (font-lock-mode 1)
+  (outline-minor-mode 1)
+  (yas-minor-mode 1)
+  (define-key yas-minor-mode-map [C-tab] 'yas-expand)
+  (define-key yas-minor-mode-map [tab] nil)
+
+  (company-auctex-init)
+  ;; (latex-preview-pane-mode 1)
+  ;; (autoload 'tex-math-preview "tex-math-preview" nil t)
+  ;; (setq project-auctex-styles (concat (file-name-directory (buffer-file-name)) "style/"))
+
+  (define-key TeX-mode-map [f10] 'tex-math-preview)
+
+  (custom-set-variables
+   '(TeX-auto-save t)
+   '(TeX-parse-self t)
+   ;; '(TeX-save-query nil)
+   '(TeX-master nil)
+   ;; '(TeX-master (locate-source-file "share/master"))
+   '(TeX-default-mode 'latex-mode)
+   '(TeX-open-quote "``")
+   '(TeX-close-quote "''")
+   ;; autoinsert math block closing
+   '(TeX-electric-math (cons "$" "$"))
+   ;; hooks list, with new section
+   ;; '(LaTeX-section-hook '(LaTeX-section-heading LaTeX-section-title LaTeX-section-section LaTeX-section-label))
+   ;; '(LaTeX-section-hook '(LaTeX-section-heading	LaTeX-section-title	LaTeX-section-toc	LaTeX-section-section LaTeX-section-label))
+   ;; '(TeX-arg-item-label-p nil)    ; set t, if you want to be asked for item label every time with C-c C-j
+   ;; ;; (setq TeX-PDF-mode t)
+   ;; ;; (LaTeX-eqnarray-label "eq")
+   ;; ;; (LaTeX-equation-label "eq")
+   ;; ;; (LaTeX-figure-label "fig")
+   ;; ;; (LaTeX-table-label "tab")
+   ;; (TeX-newline-function 'reindent-then-newline-and-indent)
+   ;; (TeX-style-path
+   ;;  '(list
+   ;;    system-auctex-styles
+   ;;    local-auctex-styles
+   ;;    project-auctex-styles))
+   ;; (LaTeX-section-hook
+   ;;  '(LaTeX-section-heading
+   ;;    LaTeX-section-title
+   ;;    LaTeX-section-toc
+   ;;    LaTeX-section-section
+   ;;    LaTeX-section-label))
+   '(outline-minor-mode-prefix "\C-c \C-o") ; Or something else
+   )
+
+  ;;   (flyspell-mode 1)
+  ;;   (flyspell-buffer)
+  ;;   (turn-on-bib-cite)
+  ;;   (setq bib-cite-use-reftex-view-crossref t)
+  ;;   (cosmonaut/TeX-keymap)
+  )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+;; USING reftex-mode: https://www.gnu.org/software/auctex/manual/reftex/RefTeX-in-a-Nutshell.html#RefTeX-in-a-Nutshell
 ;; (autoload 'reftex-mode "reftex" "RefTeX Minor Mode" t)
+;; (setq reftex-plug-into-AUCTeX t)
 ;; (autoload 'turn-on-reftex "reftex" "RefTeX Minor Mode" nil)
 ;; (autoload 'reftex-citation "reftex-cite" "Make citation" nil)
 ;; (autoload 'reftex-index-phrase-mode "reftex-index" "Phrase Mode" t)
@@ -37,84 +111,28 @@
 ;; ;; (add-hook 'reftex-load-hook 'imenu-add-menubar-index)
 ;; (add-hook 'LaTeX-mode-hook 'turn-on-reftex)
 
-;; (setq LaTeX-eqnarray-label "eq"
-;; LaTeX-equation-label "eq"
-;; LaTeX-figure-label "fig"
-;; LaTeX-table-label "tab"
-;; LaTeX-myChapter-label "chap"
-;; TeX-auto-save t
-;; TeX-newline-function 'reindent-then-newline-and-indent
-;; TeX-style-path
-;; '("style/" "auto/"
-;; "/usr/share/emacs21/site-lisp/auctex/style/"
-;; "/var/lib/auctex/emacs21/"
-;; "/usr/local/share/emacs/site-lisp/auctex/style/")
-;; LaTeX-section-hook
-;; '(LaTeX-section-heading
-;; LaTeX-section-title
-;; LaTeX-section-toc
-;; LaTeX-section-section
-;; LaTeX-section-label))
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defun cosmonaut/texinfo-hook ()
+(defhooklet cosmonaut/texinfo-hook texinfo-mode t
   (local-set-key [delete]  'delete-char)
   (define-key texinfo-mode-map [f10] 'tex-math-preview)
   (setq delete-key-deletes-forward t))
 
-(add-hook 'texinfo-mode-hook 'cosmonaut/texinfo-hook)
+(defun flymake-get-tex-args (file-name)
+  (list "pdflatex"
+        (list "-file-line-error" "-draftmode" "-interaction=nonstopmode" file-name)))
 
-;; ;; ;; CDLaTeX mode
-;; ;; ;(autoload 'cdlatex-mode "cdlatex" "CDLaTeX Mode" t)
-;; ;; ;(autoload 'turn-on-cdlatex "cdlatex" "CDLaTeX Mode" nil)
-;; ;; ;(add-hook 'LaTeX-mode-hook 'turn-on-cdlatex) ; with AUCTeX LaTeX mode
-;; ;; ;(add-hook 'latex-mode-hook 'turn-on-cdlatex)
-;; ;;                                         ; with Emacs latex mode
+;; (setq ispell-program-name "aspell") ; could be ispell as well, depending on your preferences
+;; (setq ispell-dictionary "english") ; this can obviously be set to any language your spell-checking program supports
 
-;; (require 'flymake)
+;; (defun cosmonaut/TeX-keymap ()
+;;   (local-set-key [(meta i)]
+;; 		 '(lambda ()
+;; 		    (interactive)
+;; 		    (insert "\n\\item[] ")))
+;;   ;; (local-set-key "\\" 'TeX-electric-macro)
+;;   (local-set-key "C-cc-f" 'TeX-electric-macro)
+;;   )
 
-;; (defun flymake-get-tex-args (file-name)
-;; (list "pdflatex"
-;; (list "-file-line-error" "-draftmode" "-interaction=nonstopmode" file-name)))
-
-;; (add-hook 'LaTeX-mode-hook 'flymake-mode)
-
-(setq ispell-program-name "aspell") ; could be ispell as well, depending on your preferences
-(setq ispell-dictionary "english") ; this can obviously be set to any language your spell-checking program supports
-
-(defun cosmonaut/TeX-keymap ()
-  (local-set-key [(meta i)]
-		 '(lambda ()
-		    (interactive)
-		    (insert "\n\\item[] ")))
-  ;; (local-set-key "\\" 'TeX-electric-macro)
-  (local-set-key "C-cc-f" 'TeX-electric-macro)
-  )
-
-(defun cosmonaut/tex-mode-hook ()
-  (font-lock-mode 1)
-  (outline-minor-mode 1)
-  (setq outline-minor-mode-prefix "\C-c \C-o") ; Or something else
-  (flyspell-mode 1)
-  (flyspell-buffer)
-  (turn-on-bib-cite)
-  (setq bib-cite-use-reftex-view-crossref t)
-  (cosmonaut/TeX-keymap)
-  (cdlatex-mode 1)
-  (reftex-mode 1)
-  (TeX-PDF-mode 1)
-  (setq reftex-plug-into-AUCTeX t)
-  (define-key yas-minor-mode-map [C-tab] 'yas-expand)
-  (define-key yas-minor-mode-map [tab] nil)
-  (local-unset-key (kbd "<tab>"))
-  (local-unset-key (kbd "TAB"))
-  (local-set-key "<tab>" 'cdlatex-tab)
-  )
-
-(add-hook 'TeX-mode-hook 'cosmonaut/tex-mode-hook)
-(add-hook 'LaTeX-mode-hook 'cosmonaut/tex-mode-hook)
-(add-hook 'latex-mode-hook 'cosmonaut/tex-mode-hook)
-;;
-(add-hook 'LaTeX-mode-hook #'LaTeX-preview-setup)
-(add-hook 'laTeX-mode-hook #'LaTeX-preview-setup)
+;; (add-hook 'LaTeX-mode-hook #'LaTeX-preview-setup)
+;; (add-hook 'laTeX-mode-hook #'LaTeX-preview-setup)

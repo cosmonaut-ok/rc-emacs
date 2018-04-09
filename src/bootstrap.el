@@ -81,7 +81,11 @@
     "json-mode"
     "json-reformat"
     ;; tex
+    "auctex"
+    "reftex"
+    "cdlatex-mode"
     "company-auctex"
+    "latex-preview-pane"
     ;; xml
     ;; web
     "web-mode"

@@ -95,7 +95,7 @@ FALLBACK path.  The returned file name is abbreviated.
 
 See user-get-directory-from-environment."
   (abbreviate-file-name
-   (expand-file-name "cosmonaut" (or (getenv variable) fallback))))
+   (expand-file-name "cosmonaut/" (or (getenv variable) fallback))))
 
 ;;; Custom.
 ;;;
