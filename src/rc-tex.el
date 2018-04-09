@@ -7,26 +7,24 @@
 ;; Requirements:
 ;; Status: not intended to be distributed yet
 
-;; ;; ;;(load "~/.emacs.d/share/auctex/auctex.el" nil t t)
-;; ;; ;;(load "~/.emacs.d/share/auctex/preview/preview-latex.el" nil t t)
+;;(load "~/.emacs.d/share/auctex/auctex.el" nil t t)
+;;(load "~/.emacs.d/share/auctex/preview/preview-latex.el" nil t t)
 
-;; ;; (autoload 'tex-math-preview "tex-math-preview" nil t)
+;; (autoload 'tex-math-preview "tex-math-preview" nil t)
 
-;; ;; ;; (setenv "TEXINPUTS"
-;; ;; ;;         (concat (getenv "TEXINPUTS")
-;; ;; ;;                 ":/home/ott/tex/styles//:/home/ott/projects/fprog/journal-issues/class//"))
+;; (setenv "TEXINPUTS"
+;;         (concat (getenv "TEXINPUTS")
+;;                 ":/home/ott/tex/styles//:/home/ott/projects/fprog/journal-issues/class//"))
 
-;; (defhooklet cosmonaut/ruby-indent (enh-ruby-mode ruby-mode) t
-
-;; (defvar system-auctex-styles (locate-source-file "el-get/auctex/style/"))
-;; (defvar local-auctex-styles (locate-source-file "style/"))
-;; (defvar project-auctex-styles nil)
+(defvar system-auctex-styles (locate-source-file "el-get/auctex/style/"))
+(defvar local-auctex-styles (locate-source-file "style/"))
+(defvar project-auctex-styles nil)
 
 (defhooklet cosmonaut/texlatex (tex-mode latex-mode LaTeX-mode) t
   (require 'tex-site)
   (require 'preview-latex)
   (require 'company-auctex)
-  (require 'latex-preview-pane)
+  ;; (require 'latex-preview-pane)
   ;; (require 'flymake)
 
   (autoload 'cdlatex-mode "cdlatex" "CDLaTeX Mode" t)
@@ -51,8 +49,8 @@
 
   (company-auctex-init)
   ;; (latex-preview-pane-mode 1)
-  ;; (autoload 'tex-math-preview "tex-math-preview" nil t)
-  ;; (setq project-auctex-styles (concat (file-name-directory (buffer-file-name)) "style/"))
+  (autoload 'tex-math-preview "tex-math-preview" nil t)
+  (setq project-auctex-styles (concat (file-name-directory (buffer-file-name)) "style/"))
 
   (define-key TeX-mode-map [f10] 'tex-math-preview)
 
@@ -61,6 +59,7 @@
    '(TeX-parse-self t)
    ;; '(TeX-save-query nil)
    '(TeX-master nil)
+   '(TeX-PDF-mode t)
    ;; '(TeX-master (locate-source-file "share/master"))
    '(TeX-default-mode 'latex-mode)
    '(TeX-open-quote "``")
@@ -69,33 +68,31 @@
    '(TeX-electric-math (cons "$" "$"))
    ;; hooks list, with new section
    ;; '(LaTeX-section-hook '(LaTeX-section-heading LaTeX-section-title LaTeX-section-section LaTeX-section-label))
-   ;; '(LaTeX-section-hook '(LaTeX-section-heading	LaTeX-section-title	LaTeX-section-toc	LaTeX-section-section LaTeX-section-label))
+   '(LaTeX-section-hook
+     '(LaTeX-section-heading
+       LaTeX-section-title
+       LaTeX-section-toc
+       LaTeX-section-section
+       LaTeX-section-label))
    ;; '(TeX-arg-item-label-p nil)    ; set t, if you want to be asked for item label every time with C-c C-j
-   ;; ;; (setq TeX-PDF-mode t)
    ;; ;; (LaTeX-eqnarray-label "eq")
    ;; ;; (LaTeX-equation-label "eq")
    ;; ;; (LaTeX-figure-label "fig")
    ;; ;; (LaTeX-table-label "tab")
-   ;; (TeX-newline-function 'reindent-then-newline-and-indent)
-   ;; (TeX-style-path
-   ;;  '(list
-   ;;    system-auctex-styles
-   ;;    local-auctex-styles
-   ;;    project-auctex-styles))
-   ;; (LaTeX-section-hook
-   ;;  '(LaTeX-section-heading
-   ;;    LaTeX-section-title
-   ;;    LaTeX-section-toc
-   ;;    LaTeX-section-section
-   ;;    LaTeX-section-label))
+   '(TeX-newline-function 'reindent-then-newline-and-indent)
+   '(TeX-style-path
+     (list
+      system-auctex-styles
+      local-auctex-styles
+      project-auctex-styles))
    '(outline-minor-mode-prefix "\C-c \C-o") ; Or something else
    )
 
-  ;;   (flyspell-mode 1)
-  ;;   (flyspell-buffer)
-  ;;   (turn-on-bib-cite)
-  ;;   (setq bib-cite-use-reftex-view-crossref t)
-  ;;   (cosmonaut/TeX-keymap)
+    (flyspell-mode 1)
+    (flyspell-buffer)
+    ;; (turn-on-bib-cite)
+    ;; (setq bib-cite-use-reftex-view-crossref t)
+    ;; (cosmonaut/TeX-keymap)
   )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
