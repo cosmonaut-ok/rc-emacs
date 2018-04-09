@@ -37,9 +37,8 @@
     (when (not (file-directory-p v))
       (mkdir v t)))
 
-  (push
-   (locate-source-file "lib/latex-templates/templates")
-   latex-templates-private)
+  (add-to-list 'latex-templates-private
+               (locate-source-file "lib/latex-templates/templates/"))
 
   (turn-on-cdlatex)
   (local-unset-key (kbd "<tab>"))
@@ -52,6 +51,10 @@
   (yas-minor-mode 1)
   (define-key yas-minor-mode-map [C-tab] 'yas-expand)
   (define-key yas-minor-mode-map [tab] nil)
+
+  (define-key LaTeX-mode-map [f5] 'TeX-command-run-all)
+  (define-key LaTeX-mode-map [f8] 'TeX-command-master)
+
 
   (company-auctex-init)
   ;; (latex-preview-pane-mode 1)
