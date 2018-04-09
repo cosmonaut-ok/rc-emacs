@@ -24,6 +24,8 @@
   (require 'tex-site)
   (require 'preview-latex)
   (require 'company-auctex)
+  (require 'latex-templates)
+
   ;; (require 'latex-preview-pane)
   ;; (require 'flymake)
 
@@ -34,6 +36,10 @@
   (dolist (v (append TeX-auto-private TeX-style-private))
     (when (not (file-directory-p v))
       (mkdir v t)))
+
+  (push
+   (locate-source-file "lib/latex-templates/templates")
+   latex-templates-private)
 
   (turn-on-cdlatex)
   (local-unset-key (kbd "<tab>"))
