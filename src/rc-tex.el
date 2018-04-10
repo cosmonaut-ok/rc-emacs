@@ -40,6 +40,10 @@
   (add-to-list 'latex-templates-private
                (locate-source-file "lib/latex-templates/templates/"))
 
+  ;; add custom templates
+  (add-to-list 'latex-templates-private
+               (locate-source-file "latex-templates/"))
+
   (turn-on-cdlatex)
   (local-unset-key (kbd "<tab>"))
   (local-unset-key (kbd "TAB"))
@@ -53,6 +57,7 @@
   (define-key yas-minor-mode-map [tab] nil)
 
   (define-key LaTeX-mode-map [f5] 'TeX-command-run-all)
+  (define-key LaTeX-mode-map [f5] 'TeX-command)
   (define-key LaTeX-mode-map [f8] 'TeX-command-master)
 
 

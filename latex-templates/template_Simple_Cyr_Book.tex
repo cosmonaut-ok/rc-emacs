@@ -1,0 +1,68 @@
+\documentclass[a4paper,12pt,headsepline,titlepage,normalheadings,DIVcalc,draft]{book}
+\usepackage[utf8x]{inputenc}
+\usepackage[T2A]{fontenc}
+\usepackage{graphicx}
+\usepackage{longtable}
+\usepackage{float}
+\usepackage{wrapfig}
+\usepackage{soul}
+\usepackage{amssymb}
+\usepackage{hyperref}
+\usepackage[english,ukrainian]{babel}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{setspace}
+\usepackage{lipsum}
+
+\usepackage[
+    type={CC},
+    modifier={by-nc-sa},
+    version={4.0},
+]{doclicense}
+
+\title{Заголовок}
+\author{Автор}
+\date{\today}
+
+\onehalfspacing
+
+\hyphenation{cryp-to-graphy}
+
+\begin{document}
+
+\pagenumbering{gobble}
+
+\maketitle
+
+\tableofcontents
+
+\setcounter{page}{1}
+\pagenumbering{arabic}
+
+\part{Перша Частина}
+
+\chapter{Перший Розділ}
+
+\lipsum[1]
+
+\lipsum[2]
+
+\lipsum[3]
+
+\lipsum[4]
+
+\chapter{Другий Розділ}
+
+\lipsum[5]
+
+\lipsum[6]
+
+\newpage
+
+% put text at the page bottom
+\mbox{}
+\vfill
+\begin{flushright}
+\textit{Київ, \the\year}
+\end{flushright}
+
+\end{document}
