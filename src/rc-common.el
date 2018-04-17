@@ -424,9 +424,6 @@
   (message "%s" file)
   (delete-file file)))))
 
-;; set scratch message
-(setq initial-scratch-message ";; Welcome to Cosmonaut's CUTTING BOARD\n;; Feel free to use it, like your scratchpad\n;; and perform temporary text editings here\n")
-
 (defhooklet cosmonaut/rename-scratch-buffer after-change-major-mode t
   ;; Rename scratch buffer
   (if (and (get-buffer "*scratch*") (not (get-buffer "scratch")))
