@@ -35,6 +35,7 @@
   (require 'flycheck-pos-tip)
   (flycheck-mode 1)
   (flycheck-pos-tip-mode 1)
+  (setq flycheck-disabled-checkers cosmonaut/flycheck-disabled-checkers)
   (setq flycheck-check-syntax-automatically '(save mode-enabled)))
 
 (eval-after-load 'flycheck

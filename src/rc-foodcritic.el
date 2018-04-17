@@ -31,6 +31,21 @@
 
 (defhooklet cosmonaut/foodcritic-init enh-ruby-mode cosmonaut/enable-foodcritic
   (foodcritic-mode 1)
-  (auto-revert-mode 1)) ;; TODO: is it needed here?
+  (auto-revert-mode 1) ;; TODO: is it needed here?
+  ;; set foodctiric checking command
+  (let ((chef-file-full-path (concat
+            (file-name-as-directory cosmonaut/chefdk-home)
+            (file-name-as-directory "bin")
+            "chef")))
+    (setq foodcritic-check-command
+    (if cosmonaut/enable-chefdk
+        (concat chef-file-full-path " exec " "foodcritic"
+          (if foodcritic-ignore-tags " -t " ""))
+      (concat "foodcritic"
+        (if foodcritic-ignore-tags " -t " "")))))
+  ;; keybindings
+  (local-set-key (kbd "<f5>") 'foodcritic-check-project)
+  (local-set-key (kbd "<S-f5>") 'foodcritic-check-current-file)
+  )
 
 ;;; cosmonaut-foodcritic.el ends here

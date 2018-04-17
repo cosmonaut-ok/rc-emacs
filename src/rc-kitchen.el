@@ -1,4 +1,4 @@
-;;; kitchen.el --- test kitchen support  -*- lexical-binding: t -*-
+;;; cosmonaut-kitchen.el --- test kitchen support  -*- lexical-binding: t -*-
 
 ;; Copyright (C) 2016 Alexander aka 'CosmonauT' Vynnyk
 
@@ -31,19 +31,28 @@
 ;;; test-kitchen
 ;;;
 
-(defhooklet cosmonaut/chef-kitchen chef-mode
-  (require 'test-kitchen))
-
-;; patch for original test-kitchen.el. It does not supports automatic login
+(require 'test-kitchen)
+;;
 (defcustom test-kitchen-login-command "kitchen login"
-  "The command used for converge project.")
+  "The command used for login to converged VM."
+  :type 'string
+  :group 'test-kitchen)
 
 (defun test-kitchen-login (instance)
   (interactive (list (completing-read "Kitchen instance to login: " (split-string (test-kitchen-list-bare)))))
   (let ((root-dir (test-kitchen-locate-root-dir)))
     (if root-dir
         (let ((default-directory root-dir))
-	  (with-current-buffer (term "/bin/bash")
-	    (term-send-raw-string (concat test-kitchen-login-command " " instance "\n"))))
+          (with-current-buffer (term "/bin/bash")
+            (term-send-raw-string (concat (test-kitchen-get-full-command test-kitchen-login-command)  " " instance "\n"))))
       (error "Couldn't locate .kitchen.yml!"))))
-;;
+
+(defhooklet cosmonaut/chef-kitchen (chef-mode ruby-mode enh-ruby-mode eruby-mode html-erb-mode) cosmonaut/enable-chef
+  ;;
+  (setq test-kitchen-use-chefdk-when-possible cosmonaut/enable-chefdk)
+  ;;
+  (local-set-key (kbd "<f9>") 'test-kitchen-converge)
+  (local-set-key (kbd "<S-f9>") 'test-kitchen-verify)
+  (local-set-key (kbd "<C-f9>") 'test-kitchen-converge-all)
+  (local-set-key (kbd "<C-S-f9>") 'test-kitchen-verify-all)
+  )

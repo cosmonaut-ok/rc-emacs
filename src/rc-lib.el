@@ -47,11 +47,11 @@
 (defun get-terminal-emulator ()
   (let ((terms '("konsole" "mate-terminal" "gnome-terminal" "terminator" "rxvt" "xterm")))
     (cl-labels ((get-first-existing-term (termlist)
-					 (cond ((not termlist) nil)
-					       ((call-process "which" nil nil nil (car termlist))
-						(replace-regexp-in-string "\n$" "" (shell-command-to-string (concat "which" " " (car termlist)))))
-					       (t (get-first-existing-term (cdr termlist))))))
-	       (get-first-existing-term terms))))
+           (cond ((not termlist) nil)
+                 ((call-process "which" nil nil nil (car termlist))
+            (replace-regexp-in-string "\n$" "" (shell-command-to-string (concat "which" " " (car termlist)))))
+                 (t (get-first-existing-term (cdr termlist))))))
+         (get-first-existing-term terms))))
 
 (defun open-console ()
   (interactive)
@@ -78,8 +78,8 @@
 
 (defun get-first-n-list-elements (n list)
   (cond ((null list) nil)
-	 ((= n 0) nil)
-	 (t (cons (car list) (get-first-n-list-elements (- n 1) (cdr list))))))
+   ((= n 0) nil)
+   (t (cons (car list) (get-first-n-list-elements (- n 1) (cdr list))))))
 
 (defun notify-compilation-result (buffer result &rest rest)
   "Notify about the ended compilation in BUFFER.
@@ -88,27 +88,27 @@
   (with-current-buffer buffer
     (unless (eq major-mode 'grep-mode)
       (let ((urgency) (status))
-	(if (string-match "^finished" result)
-	    (progn
-	      (setq urgency 'normal)
-	      (setq status "ok"))
-	  (progn
-	    (setq urgency 'critical)
-	    (setq status "fail")))
-	(when cosmonaut/notify-on-build
-	  (notify (concat "Build: " (buffer-name buffer))
-		  (format (concat "Command: %s\n"
-				  "Result: %s"
-				  )
-			  ;;
-			  (concat (get-first-n-list-elements
-				   25 (string-to-list compile-command)) "...")
-			  ;;
-			  result
-			  )
-		  :urgency urgency
-		  :icon (locate-source-file
-			 (concat "data/icons/hicolor/48x48/status-" status ".png"))))))))
+  (if (string-match "^finished" result)
+      (progn
+        (setq urgency 'normal)
+        (setq status "ok"))
+    (progn
+      (setq urgency 'critical)
+      (setq status "fail")))
+  (when cosmonaut/notify-on-build
+    (notify (concat "Build: " (buffer-name buffer))
+      (format (concat "Command: %s\n"
+          "Result: %s"
+          )
+        ;;
+        (concat (get-first-n-list-elements
+           25 (string-to-list compile-command)) "...")
+        ;;
+        result
+        )
+      :urgency urgency
+      :icon (locate-source-file
+       (concat "data/icons/hicolor/48x48/status-" status ".png"))))))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -119,20 +119,20 @@
 (defmacro defhooklet (name mode condition &rest body)
   "This is the test NAME, MODE, CONDITION, BODY."
   (cond ((null mode) nil)
-	((atom mode)
-	 `(add-hook ',(intern (concat (symbol-name mode) "-hook"))
-		    #'(lambda ()
-			(when ,condition
-			  (verbose-message "Launching ``%s'' hooklet on ``%s'' mode" ',name ',mode)
-			  ,@body))))
-	(t
-	 `(progn
-	    (add-hook ',(intern (concat (symbol-name (car mode)) "-hook"))
-		    #'(lambda ()
-			(when ,condition
-			  (verbose-message "Launching ``%s'' hooklet on ``%s'' mode" ',name ',(car mode))
-			  ,@body)))
-	    (defhooklet ,name ,(cdr mode) ,condition ,@body)))))
+  ((atom mode)
+   `(add-hook ',(intern (concat (symbol-name mode) "-hook"))
+        #'(lambda ()
+      (when ,condition
+        (verbose-message "Launching ``%s'' hooklet on ``%s'' mode" ',name ',mode)
+        ,@body))))
+  (t
+   `(progn
+      (add-hook ',(intern (concat (symbol-name (car mode)) "-hook"))
+        #'(lambda ()
+      (when ,condition
+        (verbose-message "Launching ``%s'' hooklet on ``%s'' mode" ',name ',(car mode))
+        ,@body)))
+      (defhooklet ,name ,(cdr mode) ,condition ,@body)))))
 
 (defun cosmonaut/enable-verbose-messages ()
   (interactive)
@@ -143,9 +143,9 @@
 
 (defun find-sublist-by-fist-element (name map)
   (cond ((null map) nil)
-	((eq name (caar map))
-	 (car map))
-	(t (find-tool-bar-item-by-name name (cdr map)))))
+  ((eq name (caar map))
+   (car map))
+  (t (find-tool-bar-item-by-name name (cdr map)))))
 
 (cl-defun tool-bar-delete-item (name &optional (map tool-bar-map))
   (let ((item (find-sublist-by-fist-element name (cdr map))))
@@ -158,9 +158,9 @@
 
 (defun cosmonaut/colorize-compilation-buffer ()
   "Colorize compile buffer output."
-  (toggle-read-only)
+  (read-only-mode 0)
   (ansi-color-apply-on-region compilation-filter-start (point))
-  (toggle-read-only))
+  (read-only-mode 1))
 
 (defmacro define-colored-compilation-mode (name title &rest body)
   "Define compilation mode with ansi colors support."
@@ -176,11 +176,11 @@
 (defun download-file (url &optional download-name)
   (interactive "sEnter download URL:\nFEnter destination filename:")
   (let ((url (if (or
-		  (string-match "^http://" url)
-		  (string-match "^https://" url)
-		  (string-match "^ftp" url))
-		 url
-	       (concat "http://" url))))
+      (string-match "^http://" url)
+      (string-match "^https://" url)
+      (string-match "^ftp" url))
+     url
+         (concat "http://" url))))
   (let ((download-buffer (url-retrieve-synchronously url)))
     (save-excursion
       (set-buffer download-buffer)
@@ -194,8 +194,52 @@
 (defun gpg-install-key (key)
   (if (executable-find "gpg")
       (let ((cmd (concat "gpg --keyserver hkp://keys.gnupg.net --recv-keys " key)))
-	(compile cmd 'cosmonaut/colored-compilation-mode))
+  (compile cmd 'cosmonaut/colored-compilation-mode))
     (error "There is no ``gpg'' binary installed in system. Can not continue")))
+
+
+;;;;
+(defun read-file-to-string (filePath)
+  "Return filePath's file content."
+  (with-temp-buffer
+    (insert-file-contents filePath)
+    (buffer-string)))
+
+(defun get--kv-value-from-list (variable list &optional delimiter)
+  (or delimiter (setq delimiter "="))
+  (cond ((null list) nil)
+  ((string-match variable (car list))
+   (cadr (split-string (car list) "=")))
+  (t (get--kv-value-from-list variable (cdr list)))))
+
+(defun get-value-by-key-from-file (key file &optional delimiter)
+  (or delimiter (setq delimiter "="))
+  (let ((file-string (read-file-to-string file)))
+    (get--kv-value-from-list
+     key
+     (split-string file-string "\n")
+     delimiter)))
+
+;; ChefDK support
+(defun cosmonaut-chefdk-command (command &optional home)
+  "Get command, when use chefDK."
+  (when (null home)
+    (setq home cosmonaut/chefdk-home))
+  (let ((chef-file-full-path (concat
+            (file-name-as-directory home)
+            (file-name-as-directory "bin")
+            command)))
+    (when (file-executable-p chef-file-full-path)
+      chef-file-full-path)))
+
+(defun cosmonaut/new-empty-buffer ()
+  "Create a new empty buffer.
+New buffer will be named untitled or untitled<2>, untitled<3>, etc."
+  (interactive)
+  (let ((buf (generate-new-buffer "untitled")))
+    (switch-to-buffer buf)
+    (funcall initial-major-mode)
+    (setq buffer-offer-save t)))
 
 
 ;;; cosmonaut-lib.el ends here

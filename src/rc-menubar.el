@@ -83,16 +83,16 @@
   '("--" nil :visible))
 
 (define-key prog-mode-map
+  [menu-bar code whitespace-mode]
+  '("Switch Whitespaces Highlighting" . whitespace-mode))
+
+(define-key prog-mode-map
   [menu-bar code drag-stuff-up]
   '("Move Line/Selected Up" . drag-stuff-up))
 
 (define-key prog-mode-map
   [menu-bar code drag-stuff-down]
   '("Move Line/Selected Down" . drag-stuff-down))
-
-;; (define-key prog-mode-map
-;;   [menu-bar code projectile]
-;;   '("Project support" . projectile-mode-map))
 
 ;; Submap
 (define-key prog-mode-map
@@ -288,6 +288,10 @@
   '("Commit Changed" . magit-commit))
 
 (define-key prog-mode-map
+  [menu-bar vcs git checkout-to-new]
+  '("Checkout To New Branch" . magit-branch-and-checkout))
+
+(define-key prog-mode-map
   [menu-bar vcs git show-log-current]
   '("Log Current Branch" . magit-log-current))
 
@@ -364,7 +368,6 @@
 (define-key global-map
   [menu-bar options cosmonaut-reinit]
   '("Reload Cosmonaut configuration" . reinit))
-
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -614,33 +617,40 @@
 ;;;
 ;;; rvm menu
 ;;;
-(define-key global-map
-  [menu-bar tools rvm]
-  (cons "RVM" (make-sparse-keymap "RVM")))
+(when cosmonaut/enable-rvm
+  ;; enable menu only if RVM integration enabled
+  (define-key global-map
+    [menu-bar tools rvm]
+    (cons "RVM" (make-sparse-keymap "RVM")))
 
-(define-key global-map
-  [menu-bar tools rvm rvm-install-rvm]
-  '("Install RVM" . rvm-install-rvm))
+  (define-key global-map
+    [menu-bar tools rvm rvm-install-rvm]
+    '("Install RVM" . rvm-install-rvm))
 
-(define-key global-map
-  [menu-bar tools rvm rvm-generate-docs]
-  '("Generate Ruby Documentation" . rvm-generate-docs))
+  (define-key global-map
+    [menu-bar tools rvm rvm-generate-docs]
+    '("Generate Ruby Documentation" . rvm-generate-docs))
 
-(define-key global-map
-  [menu-bar tools rvm rvm-use]
-  '("Use Default Ruby For This Session" . rvm-use))
+  (define-key global-map
+    [menu-bar tools rvm rvm-use]
+    '("Use Ruby/Gemset As Default For This Session" . rvm-use))
 
-(define-key global-map
-  [menu-bar tools rvm rvm-open-gem]
-  '("Open Gem" . rvm-open-gem))
+  (define-key global-map
+    [menu-bar tools rvm rvm-use-as-default]
+    '("Set Default Ruby And Gemset" . rvm-use-as-default))
 
-(define-key global-map
-  [menu-bar tools rvm install-gem]
-  '("Install Gem" . rvm-gem-install))
+  (define-key global-map
+    [menu-bar tools rvm rvm-open-gem]
+    '("Open Gem" . rvm-open-gem))
 
-(define-key global-map
-  [menu-bar tools rvm rvm-use]
-  '("Switch Ruby And Gemset Version" . rvm-use))
+  (define-key global-map
+    [menu-bar tools rvm install-gem]
+    '("Install Gem" . rvm-gem-install))
+
+  (define-key global-map
+    [menu-bar tools rvm rvm-use]
+    '("Switch Ruby And Gemset Version" . rvm-use))
+  )
 
 ;;;
 ;;; bundler Menu
@@ -720,6 +730,10 @@
 (define-key global-map
   [menu-bar tools berkshelf berks-search]
   '("Search For Remote Cookbooks" . berks-search))
+
+(define-key global-map
+  [menu-bar tools berkshelf berks-update-cookbook]
+  '("Update Cookbook" . berks-update-cookbook))
 
 (define-key global-map
   [menu-bar tools berkshelf berks-delimiter-1]
@@ -815,6 +829,10 @@
   '("Install Cosmonaut Required Dependencies" . startup-wizard))
 
 (define-key global-map
+  [menu-bar help-menu install-required-gems]
+  '("Install Cosmonaut Required Gems" . bundle-install-cosmonaut-gems))
+
+(define-key global-map
   [menu-bar help-menu cosmonaut-help-separator-2]
   '("--" nil :visible))
 
@@ -833,5 +851,17 @@
 (define-key global-map
   [menu-bar help-menu cosmonaut-help]
   '("Cosmonaut Help (Online)" . cosmonaut/help))
+
+;;;
+;;; Advanced buffer options
+;;;
+(add-to-list 'menu-bar-buffers-menu-command-entries
+	     '(rename-buffer menu-item "Rename Current Buffer" rename-buffer :help "Rename Current Buffer"))
+
+(add-to-list 'menu-bar-buffers-menu-command-entries
+	     '(cosmonaut/new-empty-buffer menu-item "Create Empty Buffer" cosmonaut/new-empty-buffer :help "Create Empty Buffer"))
+
+(add-to-list 'menu-bar-buffers-menu-command-entries
+	     '(command-separator-1 "--"))
 
 ;;; cosmonaut-menubar.el ends here

@@ -21,6 +21,9 @@
       (message "Github auth token added")
     (message "Failed to add Github auth token")))
 
+;; add G to git status map for github pulls menu
+(define-key magit-status-mode-map (kbd "G") 'magit-gh-pulls-popup)
+
 ;; magit
 ;; github-browse-file.el
 ;; github-clone.el

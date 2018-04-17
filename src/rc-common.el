@@ -36,22 +36,16 @@
 ;; (require 'github-notifier)
 ;; (require 'popup)
 (require 'ssh)
-(require 'semantic)
 
 ;;;
 ;;; Global config
 ;;;
 
-(defun cosmonaut/colorize-compilation-buffer ()
-  (toggle-read-only)
-  (ansi-color-apply-on-region compilation-filter-start (point))
-  (toggle-read-only))
-
 ;;;; Global default configuration parameters
 
 (custom-set-variables
- '(yes-or-no-p 'y-or-n-p) ;replace y-e-s by y
- '(inhibit-startup-message t) ;no splash screen
+ '(yes-or-no-p 'y-or-n-p)   ;replace y-e-s by y
+ '(inhibit-startup-message t)   ;no splash screen
  ;; backup
  '(make-backup-files cosmonaut/autobackup)
  '(use-backup-dir cosmonaut/autobackup) ;use backup directory
@@ -76,12 +70,25 @@
 (add-hook 'minibuffer-setup-hook '(lambda ()
                                    (visual-line-mode -1)))
 
-;;;; Sync linux and eamcs clipboards
-;; after copy Ctrl+c in Linux X11, you can paste by `yank' in emacs
-(setq x-select-enable-clipboard t)
+;;;; enable cua mode
+(defhooklet cosmonaut/cua-mode emacs-startup cosmonaut/familiar-copy-paste-cut
+  ;; https://www.emacswiki.org/emacs/CuaMode
+  (cua-mode t))
 
-;; after mouse selection in X11, you can paste by `yank' in emacs
-(setq x-select-enable-primary t)
+(defhooklet cosmonaut/cua-mode text-mode cosmonaut/familiar-copy-paste-cut
+  (cua-mode t))
+
+(defhooklet cosmonaut/cua-mode prog-mode cosmonaut/familiar-copy-paste-cut
+  (cua-mode t))
+
+(custom-set-variables
+;;;; Sync linux and eamcs clipboards
+ ;; after copy Ctrl+c in Linux X11, you can paste by `yank' in emacs
+ '(x-select-enable-clipboard t)
+
+ ;; after mouse selection in X11, you can paste by `yank' in emacs
+ '(x-select-enable-primary t)
+ )
 
 ;;;; Move lines/regions up/down
 (require 'drag-stuff)
@@ -106,6 +113,13 @@
 (setq dabbrev-always-check-other-buffers t)
 ;; (setq dabbrev-abbrev-char-regexp "\\sw\\|\\s_")
 
+;; load cedet components
+(load "cedet")
+(load "semantic")
+(load "srecode")
+(load "eieio")
+(load "ede")
+
 ;; move semanticDB, srecode and ede to cache
 (mkdir cosmonaut/user-cache-directory t)
 (custom-set-variables
@@ -113,11 +127,16 @@
  '(semanticdb-default-save-directory (locate-user-cache-file "cosmonaut-semanticdb"))
  '(srecode-map-save-file (locate-user-cache-file "cosmonaut-srecode-map.el")))
 
-;; set semantic/imenu buffer autorescan
+;; setup semantic/imenu autorefresh
 (custom-set-variables
- '(imenu-auto-rescan t))
-(global-semanticdb-minor-mode 1)
-(global-semantic-idle-scheduler-mode 1)
+ '(imenu-auto-rescan t)
+ )
+
+;; semantic global mode
+(global-semantic-idle-completions-mode t)
+(global-semantic-decoration-mode t)
+(global-semantic-highlight-func-mode t)
+(global-semantic-show-unmatched-syntax-mode t)
 
 ;;;; Column & line numbers in mode bar
 (column-number-mode t)
@@ -162,10 +181,12 @@
  )
 
 (global-set-key "\M-x" (lambda ()
-			 (interactive)
-			 (call-interactively (intern (ido-completing-read
-						      "M-x " (all-completions "" obarray 'commandp))))))
+       (interactive)
+       (call-interactively (intern (ido-completing-read
+                  "M-x " (all-completions "" obarray 'commandp))))))
+;; set key to enable whitespace mode
 (global-set-key (kbd "C-c w") 'whitespace-mode)
+(global-set-key (kbd "C-c C-w") 'whitespace-mode)
 
 ;; set ido-completing-read as default completing function
 (setq ido-cr+-replace-completely t)
@@ -192,8 +213,8 @@
 ;;;
 
 (defvar cosmonaut-max-line-length (concat "^[^\n]\\{"
-					   (number-to-string cosmonaut/max-line-length)
-					   "\\}\\(.*\\)$"))
+             (number-to-string cosmonaut/max-line-length)
+             "\\}\\(.*\\)$"))
 
 ;;;
 ;;; activate generic options
@@ -216,10 +237,13 @@
   (font-lock-mode 1)
   ;; Drag and move selcted
   (drag-stuff-mode 1)
-  ;;
-  (require 'highlight-symbol)
-  (highlight-symbol-mode 1)
+  ;; set global indent-tabs-mode
+  (setq indent-tabs-mode cosmonaut/indent-tabs-mode)
+  ;; highlight-symbol-mode
+  (highlight-symbol-mode cosmonaut/highlight-symbol)
+
   (local-set-key (kbd "C-c C-f") 'flash-cross)
+  (local-set-key (kbd "RET") 'newline-and-indent)
 
   (message "Prog mode enabled. USE Shift+SPACE to show or hide blocks"))
 
@@ -230,8 +254,8 @@
 ;;
 (when (and cosmonaut/check-parens-before-save buffer-file-name)
   (add-hook 'before-save-hook
-	    'check-parens
-	    nil t))
+      'check-parens
+      nil t))
 
 ;; magit-gh-pulls
 (add-hook 'magit-mode-hook 'turn-on-magit-gh-pulls)
@@ -288,11 +312,11 @@
   ;; highlight too long lines
   (when cosmonaut/highlight-too-long-lines
     (let ((cosmonaut-max-line-length (concat "^[^\n]\\{"
-					      (number-to-string cosmonaut/max-line-length)
-					      "\\}\\(.*\\)$"))
-	  (cosmonaut-previous-max-line-length (concat "^[^\n]\\{"
-						       (number-to-string cosmonaut-last-max-line-length)
-						       "\\}\\(.*\\)$")))
+                (number-to-string cosmonaut/max-line-length)
+                "\\}\\(.*\\)$"))
+    (cosmonaut-previous-max-line-length (concat "^[^\n]\\{"
+                   (number-to-string cosmonaut-last-max-line-length)
+                   "\\}\\(.*\\)$")))
       (font-lock-remove-keywords nil (list (list (concat "^[^\n]\\{" cosmonaut-previous-max-line-length "\\}\\(.*\\)$") 1 font-lock-warning-face t)))
       (font-lock-add-keywords nil (list (list cosmonaut-max-line-length 1 font-lock-warning-face t)))))
   (setq cosmonaut-max-line-length cosmonaut/max-line-length))
@@ -318,9 +342,8 @@
 ;;;
 ;;; projectile
 ;;;
-(defhooklet cosmonaut/projectile prog-mode t
-  (require 'projectile)
-  (projectile-mode 1))
+(require 'projectile)
+(projectile-global-mode 1)
 
 ;;;
 ;;; require-final-newline
@@ -329,15 +352,11 @@
   (setq require-final-newline 1))
 
 ;;;
-;;; indent options
+;;; indent-level
 ;;;
-(defhooklet cosmonaut/indent prog-mode t
+(defhooklet cosmonaut/indent-level prog-mode t
   (custom-set-variables
-   '(standard-indent cosmonaut/indent-level)
-     ;; set global indent-tabs-mode
-   '(indent-tabs-mode cosmonaut/indent-tabs-mode)
-   )
-  (local-set-key (kbd "RET") 'newline-and-indent))
+   '(standard-indent cosmonaut/indent-level)))
 
 ;;;
 ;;; ssh
@@ -360,7 +379,7 @@
 
 ;;;; Notify result from compilation buffer
 (add-to-list 'compilation-finish-functions
-	     'notify-compilation-result)
+       'notify-compilation-result)
 
 ;;;
 ;;; helm-swoop
@@ -369,8 +388,14 @@
 ;; (global-set-key (kbd "C-M-S") 'helm-swoop)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;; set key to open-console
+;;;; set some generic keys
 (global-set-key (kbd "<f12>") 'open-console)
+(global-set-key (kbd "<S-f12>") 'ielm)
+
+(global-set-key (kbd "<f7>") 'isearch-forward)
+(global-set-key (kbd "<S-f7>") 'highlight-regexp)
+(global-set-key (kbd "<C-S-f7>") 'unhighlight-regexp)
+(global-set-key (kbd "<M-f7>") 'projectile-grep)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;;;
@@ -381,7 +406,7 @@
 (setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
                          ("marmalade" . "http://marmalade-repo.org/packages/")
                          ("melpa" . "http://melpa.milkbox.net/packages/")
-			 ("org" . "http://orgmode.org/elpa/")))
+       ("org" . "http://orgmode.org/elpa/")))
 
 (package-initialize)
 
@@ -391,18 +416,23 @@
 (when cosmonaut/clear-autobackups
   (message "Deleting old backup files...")
   (let ((week (* 60 60 24 7))
-	(current (float-time (current-time))))
+  (current (float-time (current-time))))
     (dolist (file (directory-files temporary-file-directory t))
       (when (and (backup-file-name-p file)
-		 (> (- current (float-time (fifth (file-attributes file))))
-		    week))
-	(message "%s" file)
-	(delete-file file)))))
+     (> (- current (float-time (fifth (file-attributes file))))
+        week))
+  (message "%s" file)
+  (delete-file file)))))
 
-;;;
-;;; octave mode for matlab files
-;;;
-(add-to-list 'auto-mode-alist '("\\.m\\'" . octave-mode))
-(autoload 'run-octave "octave-inf" nil t)
+;; set scratch message
+(setq initial-scratch-message ";; Welcome to Cosmonaut's CUTTING BOARD\n;; Feel free to use it, like your scratchpad\n;; and perform temporary text editings here\n")
+
+(defhooklet cosmonaut/rename-scratch-buffer after-change-major-mode t
+  ;; Rename scratch buffer
+  (if (and (get-buffer "*scratch*") (not (get-buffer "scratch")))
+      (with-current-buffer "*scratch*"
+  (rename-buffer "*cutting-board*")
+  ;;
+  (insert (propertize initial-scratch-message)))))
 
 ;;; cosmonaut-common.el ends here

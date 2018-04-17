@@ -32,10 +32,9 @@
 
 ;; (require 'yasnippets)
 
-(yas/initialize)
+(yas-global-mode 1)
 
 (add-to-list 'yas/snippet-dirs (concat cosmonaut/source-directory "/data/snippets/"))
-(add-to-list 'yas/snippet-dirs (concat cosmonaut/source-directory "el-get/yasnippet-snippets/"))
 (add-to-list 'yas/snippet-dirs (concat cosmonaut/source-directory "el-get/yasnippets/"))
 (add-to-list 'yas/snippet-dirs (concat cosmonaut/source-directory "el-get/yasnippet/snippets/"))
 (add-to-list 'yas/snippet-dirs (concat cosmonaut/source-directory "lib/rspec-mode/snippets/"))
@@ -48,7 +47,7 @@
  '(yas-use-menu nil))
 
 ;; (yas-global-mode 1)
-(yas/reload-all)
+(yas-reload-all)
 
 ;; do not bind yasnippet to TAB key. Bind it to C-TAB
 (define-key yas-minor-mode-map (kbd "<C-M-tab>") 'yas-ido-expand)
@@ -83,7 +82,7 @@
 
 ;; do not activate yas in term
 (add-hook 'term-mode-hook (lambda()
-			    (setq yas-dont-activate t)))
+			    (setq yas-dont-activate-functions t)))
 
 ;;;
 ;;; yas-minor-mode

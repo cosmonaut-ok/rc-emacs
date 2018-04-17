@@ -129,7 +129,7 @@ See user-get-directory-from-environment."
   :type 'string :group 'cosmonaut/user-directories)
 
 (defcustom cosmonaut/user-documents-directory
-  (if (zerop (call-process "xdg-user-dir" nil nil nil))
+  (if (and (zerop (call-process "which" nil nil nil "xdg-user-dir")) (zerop (call-process "xdg-user-dir" nil nil nil)))
       (remove ?\n (shell-command-to-string "xdg-user-dir \"DOCUMENTS\""))
     (expand-file-name "~/Documents"))
   "The user directory where the user stores it's documents."

@@ -52,12 +52,9 @@
       (require 'inf-ruby)
       (when (executable-find "pry")
 	(setq inf-ruby-default-implementation "pry"))
-      ;;
-      ;; Do not start it automatically
-      ;;
-      ;; (inf-ruby)
-      ;; (when (executable-find "pry")
-      ;; 	(robe-start))
+      (inf-ruby)
+      (when (executable-find "pry")
+	(robe-start))
       (custom-set-variables '(cosmonaut/ruby-present-p t)))
   (warn "WARNING! ``Ruby'' and/or ``irb'' are not installed in your system. You can install it, by clicking ``Menu'' -> ``Help'' -> ``Install Cosmonaut required dependencies'',\nor via RVM (``Menu'' -> ``Tools'' -> ``RVM'' -> ``install gemfile'' -> ``irb'') and irb/pry via gems or in your preferred way, else only restricted ruby support available"))
 
@@ -79,6 +76,9 @@
 		 "\\.rjs\\'" "\\.irbrc\\'" "\\.pryrc\\'" "\\.builder\\'" "\\.ru\\'"
 		 "\\.gemspec\\'" "Gemfile\\'")
   )
+
+(eval-after-load 'enh-ruby-mode
+  '(define-key ruby-mode-map (kbd "TAB") 'indent-for-tab-command))
 
 (eval-after-load 'ruby-mode
   '(define-key ruby-mode-map (kbd "TAB") 'indent-for-tab-command))
@@ -106,7 +106,9 @@
                (lambda (arg) (ruby-end-of-block)) nil))
 
 (defhooklet cosmonaut/ruby-generic enh-ruby-mode t
-  (inf-ruby-minor-mode 1))
+  (inf-ruby-minor-mode 1)
+  (local-set-key (kbd "<C-f12>") 'ruby-switch-to-inf)
+  )
 
 ;;;
 ;;; ruby-electric
@@ -154,10 +156,46 @@
 ;;;
 ;;; rubocop
 ;;;
+;; patch for original rubocop.el
+
+(defun rubocop-bundled-p ()
+  "Check if RuboCop has been bundled."
+  (let ((gemfile-lock (expand-file-name "Gemfile.lock" (rubocop-project-root))))
+    (when (and (file-exists-p gemfile-lock) cosmonaut/enable-bundler)
+      (with-temp-buffer
+        (insert-file-contents gemfile-lock)
+        (re-search-forward "rubocop" nil t)))))
+
+(defun rubocop-chefdked-p ()
+  (and cosmonaut/enable-chef cosmonaut/enable-chefdk (file-directory-p cosmonaut/chefdk-home)))
+
+(defun rubocop-build-command (command path)
+  "Build the full command to be run based on COMMAND and PATH.
+The command will be prefixed with `bundle exec` if RuboCop is bundled."
+  (concat
+   (cond ((rubocop-chefdked-p)
+	  (concat
+	   (file-name-as-directory cosmonaut/chefdk-home)
+	   (file-name-as-directory "bin")
+	   "chef" "exec "))
+	 ((rubocop-bundled-p) "bundle exec ")
+	 (t ""))
+   command
+   (rubocop-build-requires)
+   " "
+   path))
+
+;; /patch for original rubocop.el
+
 (defhooklet cosmonaut/rubocop enh-ruby-mode cosmonaut/enable-rubocop
   (require 'rubocop)
   (rubocop-mode 1)
   (auto-revert-mode 1) ;; TODO: is it needed here?
+  (custom-set-variables
+   '(rubocop-check-command "rubocop -r cookstyle -D --format emacs")
+   )
+  (local-set-key (kbd "<f6>") 'rubocop-check-project)
+  (local-set-key (kbd "<S-f6>") 'rubocop-check-current-file)
   )
 
 ;;;
@@ -165,17 +203,18 @@
 ;;;
 (defhooklet cosmonaut/flycheck-ruby cosmonaut/enable-flycheck
   ;; (require 'flycheck) already activated in prog-mode
-  (flycheck-mode 1)
-  (setq-default flycheck-check-syntax-automatically '(save mode-enabled)))
+  ;; (setq flycheck-disabled-checkers cosmonaut/flycheck-disabled-checkers)
+  ;; (setq flycheck-check-syntax-automatically '(save mode-enabled))
+  (flycheck-mode 1))
 
 ;;;
 ;;; flymake
 ;;;
-(defhooklet cosmonaut/flymake-ruby enh-ruby-mode cosmonaut/enable-flymake
-  ;; (require 'flymake) already activated in prog-mode
-  (require 'flymake-ruby)
-  (flymake-ruby-load) ;; FIXME: not loading automatically
-  (flymake-mode 1))
+;; (defhooklet cosmonaut/flymake-ruby enh-ruby-mode cosmonaut/enable-flymake
+;;   ;; (require 'flymake) already activated in prog-mode
+;;   (require 'flymake-ruby)
+;;   (flymake-ruby-load) ;; FIXME: not loading automatically
+;;   (flymake-mode 1))
 
 ;;;
 ;;; ri
@@ -199,7 +238,7 @@
 ;;; RVM form enh-ruby-mode
 ;;;
 (defhooklet cosmonaut/ruby-rvm enh-ruby-mode cosmonaut/enable-rvm
-  (rvm-use-default)
+  ;; (rvm-use-default)
   (require 'rvm)
   ;; connect rvm+robe
   (when cosmonaut/enable-robe

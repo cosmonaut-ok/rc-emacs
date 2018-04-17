@@ -31,10 +31,20 @@
 (require 'url)
 ;; RVM installation hack
 (defvar rvm-installation-url "https://get.rvm.io/")
+(defvar rvm--gemset-default "cosmonaut")
 
 (defvar rvm-installation-key "409B6B1796C275462A1703113804BB82D39DC0E3")
 
+(setq rvm--gemset-default cosmonaut/rvm-default-gemset)
+
 (define-colored-compilation-mode rvm-installation-mode "RVM installation")
+
+(defcustom rvm-script
+  (or (and (file-readable-p "~/.rvm/scripts/rvm") "~/.rvm/scripts/rvm")
+      (and (file-readable-p "/usr/local/rvm/scripts/rvm") "/usr/local/rvm/scripts/rvm"))
+  "Location of RVM script source."
+  :group 'rvm
+  :type 'file)
 
 (defun rvm-install-rvm (ruby)
   (interactive "sWhich ruby do you want to install?: ")
@@ -49,7 +59,7 @@
 	     " --ruby="
 	     ruby
 	     " --auto-dotfiles"
-	     (when cosmonaut/use-bundler
+	     (when cosmonaut/enable-bundler
 	       " --gems=bundler"))
 	    'rvm-installation-mode))))
 
@@ -58,7 +68,7 @@
   (async-shell-command
    (concat
     "source "
-    (expand-file-name "~/.rvm/scripts/rvm")
+    (expand-file-name rvm-script)
     "; rvm install "
     ruby)
    "*Ruby installation*"))
@@ -68,8 +78,44 @@
   (compile
    (concat
     "source "
-    (expand-file-name "~/.rvm/scripts/rvm")
+    (expand-file-name rvm-script)
     "; rvm docs generate ")
    'rvm-installation-mode))
+
+(defun rvm-use-as-default (new-ruby new-gemset)
+  "switch the current ruby version to any ruby, which is installed with rvm and use it as default"
+  (interactive
+   (let* ((picked-ruby (rvm--completing-read "Ruby Version: "
+					     (rvm/list)))
+	  (picked-gemset (rvm--completing-read "Gemset: "
+					       (rvm/gemset-list picked-ruby))))
+     (list picked-ruby picked-gemset)))
+  (when (rvm-working-p)
+    (let* ((new-ruby-with-gemset (rvm--ruby-gemset-string new-ruby new-gemset))
+	   (ruby-info (rvm/info new-ruby-with-gemset))
+	   (new-ruby-binary (cdr (assoc "ruby" ruby-info)))
+	   (new-ruby-gemhome (cdr (assoc "GEM_HOME" ruby-info)))
+	   (new-ruby-gempath (cdr (assoc "GEM_PATH" ruby-info))))
+      (setq rvm--current-ruby new-ruby)
+      (setq rvm--current-gemset new-gemset)
+      (setq rvm--gemset-default new-gemset)
+      (rvm--set-ruby-default new-ruby new-gemset)
+      (rvm--set-gemhome new-ruby-gemhome new-ruby-gempath new-gemset))
+    (rvm--message (concat "Ruby: " new-ruby " Gemset: " new-gemset))))
+
+(defun rvm--set-ruby-default (ruby gemset)
+  (shell-command-to-string
+   (concat
+    "source "
+    (expand-file-name rvm-script)
+    "; rvm use "
+    ruby
+    rvm--gemset-separator
+    gemset
+    " --default;"
+    )))
+
+(defhooklet cosmonaut/rvm enh-ruby-mode t
+  (local-set-key (kbd "<C-f3>") 'rvm-use))
 
 ;;; cosmonaut-rvm.el ends here

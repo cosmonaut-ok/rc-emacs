@@ -93,6 +93,12 @@
   :group 'cosmonaut/face
   )
 
+(defcustom cosmonaut/highlight-symbol t
+  "Automatically highlight all symbols in buffer, matched to selected."
+  :type 'boolean
+  :group 'cosmonaut/face
+  )
+
 ;;;
 ;;; backup
 ;;;
@@ -204,11 +210,17 @@
   :group 'cosmonaut/programming
   )
 
-(defcustom cosmonaut/enable-flymake t
-  "Enable flymake support (on-the-fly syntax checking)."
-  :type 'boolean
+(defcustom cosmonaut/flycheck-disabled-checkers '(ruby-rubylint)
+  "Disable some flycheck checkers for ruby files."
+  :type 'list
   :group 'cosmonaut/programming
   )
+
+;; (defcustom cosmonaut/enable-flymake t
+;;   "Enable flymake support (on-the-fly syntax checking)."
+;;   :type 'boolean
+;;   :group 'cosmonaut/programming
+;;   )
 
 (defcustom cosmonaut/enable-spell-checking nil
   "Enable spell checking in code comments."
@@ -247,14 +259,20 @@
   :group 'cosmonaut/ruby
   )
 
-(defcustom cosmonaut/enable-rvm t
+(defcustom cosmonaut/enable-rvm nil
   "Use RVM (if possible)."
   :type 'boolean
   :group 'cosmonaut/ruby
   )
 
+(defcustom cosmonaut/rvm-default-gemset "global"
+  "Default rvm default gemset."
+  :type 'string
+  :group 'cosmonaut/ruby
+  )
+
 (defcustom cosmonaut/enable-rubocop t
-  "Enable rubocop, when open ruby file,"
+  "Enable rubocop, when open ruby file."
   :type 'boolean
   :group 'cosmonaut/ruby
   )
@@ -281,6 +299,24 @@
 
 (defcustom cosmonaut/enable-foodcritic t
   "Enable flycheck foodcritic checker (reboot needed)."
+  :type 'boolean
+  :group 'cosmonaut/chef
+  )
+
+(defcustom cosmonaut/enable-chefdk t
+  "Enable chef extensions, when using ruby files."
+  :type 'boolean
+  :group 'cosmonaut/chef
+  )
+
+(defcustom cosmonaut/chefdk-home "/opt/chefdk"
+  "Set chefDK home directory."
+  :type 'directory
+  :group 'cosmonaut/chef
+  )
+
+(defcustom cosmonaut/enable-bundler t
+  "Enable bundler, when using ruby files."
   :type 'boolean
   :group 'cosmonaut/chef
   )

@@ -31,4 +31,7 @@
 
 (defvar cosmonaut/use-berkshelf t) ;; TODO: convert to defcustom
 
+(defhooklet cosmonaut/berkshelf chef-mode t
+  (local-set-key (kbd "<f3>") 'berks-update))
+
 ;;; cosmonaut-berkshelf.el ends here
