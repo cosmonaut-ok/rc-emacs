@@ -1,22 +1,25 @@
 \documentclass[
-a5paper,
-14pt,
+a4paper,
+12pt,
 onehalfspacing,
 headsepline,
 notitlepage,
 normalheadings,
 twoside,
-DIVcalc]{book}
+DIVcalc]{article}
 
-\usepackage[utf8]{inputenc}
+\usepackage[utf8x]{inputenc}
 \usepackage[T2A, T1]{fontenc}
 \usepackage{lmodern}
 \usepackage{graphicx}
 \usepackage{wrapfig}
 \usepackage{amssymb}
+\usepackage{hyperref}
 \usepackage[english, ukrainian]{babel}
 
 \usepackage{blindtext}
+
+\usepackage{multicol}
 
 % \usepackage[
 %     type={CC},
@@ -30,8 +33,11 @@ DIVcalc]{book}
 \renewcommand{\thesection}{}
 \renewcommand{\thesubsection}{} % {\arabic{section}.\arabic{subsection}}
 \renewcommand{\thesubsubsection}{}
- \renewcommand{\familydefault}{\sfdefault}
+\renewcommand{\familydefault}{\sfdefault}
 % \setmainfont{Times}
+
+\pagenumbering{gobble} % remove page numbering. Variants: r(R)oman, a(A)rabic, a(A)lph
+
 
 % opening
 \title{Example Title}
@@ -52,10 +58,13 @@ DIVcalc]{book}
 
 \subsubsection{Example Subsubsection}
 
-The mother fucker is here
-
+% singlecolumnt text
 \blindtext
 
+% multicolumnt text
+\begin{multicols}{2}
+\blindtext
+\end{multicols}
 \newpage
 
 \begin{flushright}
