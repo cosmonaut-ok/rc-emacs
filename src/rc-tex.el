@@ -16,21 +16,29 @@
 ;;         (concat (getenv "TEXINPUTS")
 ;;                 ":/home/ott/tex/styles//:/home/ott/projects/fprog/journal-issues/class//"))
 
+;;; Code:
+
+(autoload 'TeX-load-hack
+  (expand-file-name "tex-site.el" (file-name-directory load-file-name)))
+(TeX-load-hack)
+
+(require 'preview-latex)
+(require 'latex-preview-pane)
+
+(require 'company-auctex)
+(require 'latex-templates)
+
+;; (require 'flymake)
+
+;; (autoload 'cdlatex-mode "cdlatex" "CDLaTeX Mode" t)
+;; (autoload 'turn-on-cdlatex "cdlatex" "CDLaTeX Mode" nil)
+;; (turn-on-cdlatex)
+
+(autoload 'tex-math-preview "tex-math-preview" nil t)
+
 (defvar system-auctex-styles (locate-source-file "el-get/auctex/style/"))
 (defvar local-auctex-styles (locate-source-file "style/"))
 (defvar project-auctex-styles nil)
-
-(defhooklet cosmonaut/texlatex (tex-mode latex-mode LaTeX-mode) t
-  (require 'tex-site)
-  (require 'preview-latex)
-  (require 'company-auctex)
-  (require 'latex-templates)
-
-  ;; (require 'latex-preview-pane)
-  ;; (require 'flymake)
-
-  (autoload 'cdlatex-mode "cdlatex" "CDLaTeX Mode" t)
-  (autoload 'turn-on-cdlatex "cdlatex" "CDLaTeX Mode" nil)
 
   ;; create auto lisp directory
   (dolist (v (append TeX-auto-private TeX-style-private))
@@ -44,29 +52,28 @@
   (add-to-list 'latex-templates-private
                (locate-source-file "latex-templates/"))
 
-  (turn-on-cdlatex)
-  (local-unset-key (kbd "<tab>"))
-  (local-unset-key (kbd "TAB"))
-  (local-set-key "<tab>" 'cdlatex-tab)
+(defhooklet cosmonaut/texlatex (tex-mode latex-mode LaTeX-mode) t
+  ;; (local-unset-key (kbd "<tab>"))
+  ;; (local-unset-key (kbd "TAB"))
+  ;; (local-set-key "<tab>" 'cdlatex-tab)
 
   ;; (flymake-mode 1)
-  (font-lock-mode 1)
+  (font-lock-mode 1) ;; does not needed, as implemented in prog-mode
+  (ecb-deactivate) ;; we don't need a ECB when editing tex/latex files
   (outline-minor-mode 1)
   (yas-minor-mode 1)
   (define-key yas-minor-mode-map [C-tab] 'yas-expand)
   (define-key yas-minor-mode-map [tab] nil)
 
   (define-key LaTeX-mode-map [f5] 'TeX-command-run-all)
-  (define-key LaTeX-mode-map [f5] 'TeX-command)
   (define-key LaTeX-mode-map [f8] 'TeX-command-master)
-
 
   (company-auctex-init)
   ;; (latex-preview-pane-mode 1)
-  (autoload 'tex-math-preview "tex-math-preview" nil t)
+
   (setq project-auctex-styles (concat (file-name-directory (buffer-file-name)) "style/"))
 
-  (define-key TeX-mode-map [f10] 'tex-math-preview)
+  (define-key TeX-mode-map [f10] 'preview-at-point)
 
   (custom-set-variables
    '(TeX-auto-save t)
@@ -102,11 +109,11 @@
    '(outline-minor-mode-prefix "\C-c \C-o") ; Or something else
    )
 
-    (flyspell-mode 1)
-    (flyspell-buffer)
-    ;; (turn-on-bib-cite)
-    ;; (setq bib-cite-use-reftex-view-crossref t)
-    ;; (cosmonaut/TeX-keymap)
+  (flyspell-mode 1)
+  (flyspell-buffer)
+  ;; (turn-on-bib-cite)
+  ;; (setq bib-cite-use-reftex-view-crossref t)
+  ;; (cosmonaut/TeX-keymap)
   )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
