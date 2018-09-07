@@ -241,9 +241,6 @@
 ;; If you prefer fuzzy matching
 (setq helm-swoop-use-fuzzy-match t)
 
-;; If you would like to use migemo, enable helm's migemo feature
-(helm-migemo-mode 1)
-
 ;; (helm-linum-relative-mode 1)
 
 ;; ;;;; ido
@@ -327,6 +324,9 @@
 
   (local-set-key (kbd "C-c C-f") 'flash-cross)
   (local-set-key (kbd "RET") 'newline-and-indent)
+
+  ;; autocomplete is ein dependency
+  (auto-complete-mode 0)
 
   (message "Prog mode enabled. USE Shift+SPACE to show or hide blocks"))
 
