@@ -13,7 +13,7 @@
 
 (defvar cosmonaut/list-load-components
   '("lib" "custom" "common" "tabbar" "git" "yasnippet" "company"
-    "ruby" "rspec" "chef" "kitchen" "bundler" "berkshelf"
+    "python" "ruby" "rspec" "chef" "kitchen" "bundler" "berkshelf"
     "foodcritic" "rvm" "codebrowser" "markdown"
     "yaml" "json" "web" "erb" "fly" "popup-menu"
     "lisp" "c-pp" "makefile" "org" "tex"

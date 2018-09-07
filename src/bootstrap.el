@@ -35,7 +35,7 @@
 (defvar cosmonaut/el-get-force-reinit nil)
 
 (setq user-emacs-directory cosmonaut/source-directory)
-
+  
 (defvar *el-get-packages-list*
   '(
     ;; libraries and frameworks
@@ -61,6 +61,12 @@
     "rvm"
     "yari"
     "bundler"
+    ;; python
+    "python-mode"
+    "pymacs"
+    "python-virtualenv"
+    "company-jedi"
+    "autopair"
     ;; "rspec-mode" ;; moved to scripts
     ;; completion
     "company-mode"
