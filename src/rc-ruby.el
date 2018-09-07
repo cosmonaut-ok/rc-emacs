@@ -46,15 +46,15 @@
 (if (and
      (executable-find "ruby")
      (or (executable-find "irb")
-	 (executable-find "pry")))
+   (executable-find "pry")))
     (progn
       (require 'robe)
       (require 'inf-ruby)
       (when (executable-find "pry")
-	(setq inf-ruby-default-implementation "pry"))
+  (setq inf-ruby-default-implementation "pry"))
       (inf-ruby)
       (when (executable-find "pry")
-	(robe-start))
+  (robe-start))
       (custom-set-variables '(cosmonaut/ruby-present-p t)))
   (warn "WARNING! ``Ruby'' and/or ``irb'' are not installed in your system. You can install it, by clicking ``Menu'' -> ``Help'' -> ``Install Cosmonaut required dependencies'',\nor via RVM (``Menu'' -> ``Tools'' -> ``RVM'' -> ``install gemfile'' -> ``irb'') and irb/pry via gems or in your preferred way, else only restricted ruby support available"))
 
@@ -68,13 +68,13 @@
 (if cosmonaut/ruby-present-p
     ;; add auto-modes
     (add-auto-mode 'enh-ruby-mode
-		   "Rakefile\\'" "\\.rake\\'" "\\.rxml\\'" "\\/spec\\/" "\\.rb\\'"
-		   "\\.rjs\\'" "\\.irbrc\\'" "\\.pryrc\\'" "\\.builder\\'" "\\.ru\\'"
-		   "\\.gemspec\\'" "Gemfile\\'")
+       "Rakefile\\'" "\\.rake\\'" "\\.rxml\\'" "\\/spec\\/" "\\.rb\\'"
+       "\\.rjs\\'" "\\.irbrc\\'" "\\.pryrc\\'" "\\.builder\\'" "\\.ru\\'"
+       "\\.gemspec\\'" "Gemfile\\'")
   (add-auto-mode 'ruby-mode
-		 "Rakefile\\'" "\\.rake\\'" "\\.rxml\\'" "\\/spec\\/" "\\.rb\\'"
-		 "\\.rjs\\'" "\\.irbrc\\'" "\\.pryrc\\'" "\\.builder\\'" "\\.ru\\'"
-		 "\\.gemspec\\'" "Gemfile\\'")
+     "Rakefile\\'" "\\.rake\\'" "\\.rxml\\'" "\\/spec\\/" "\\.rb\\'"
+     "\\.rjs\\'" "\\.irbrc\\'" "\\.pryrc\\'" "\\.builder\\'" "\\.ru\\'"
+     "\\.gemspec\\'" "Gemfile\\'")
   )
 
 (eval-after-load 'enh-ruby-mode
@@ -174,12 +174,12 @@
 The command will be prefixed with `bundle exec` if RuboCop is bundled."
   (concat
    (cond ((rubocop-chefdked-p)
-	  (concat
-	   (file-name-as-directory cosmonaut/chefdk-home)
-	   (file-name-as-directory "bin")
-	   "chef" "exec "))
-	 ((rubocop-bundled-p) "bundle exec ")
-	 (t ""))
+    (concat
+     (file-name-as-directory cosmonaut/chefdk-home)
+     (file-name-as-directory "bin")
+     "chef" "exec "))
+   ((rubocop-bundled-p) "bundle exec ")
+   (t ""))
    command
    (rubocop-build-requires)
    " "

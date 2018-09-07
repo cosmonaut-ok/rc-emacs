@@ -163,7 +163,7 @@ cosmonaut/user-data-directory."
                    (:runtime cosmonaut/user-cache-directory)
                    (:lisp cosmonaut/user-lisp-directory)
                    (:documents cosmonaut/user-documents-directory)
-		   (:source cosmonaut/source-directory) ;; look in ../init.el
+       (:source cosmonaut/source-directory) ;; look in ../init.el
                    (t (error "Directory must be ommited or one of :data :config :cache :lisp :runtime :documents :source.")))))
     (expand-file-name filename dir)))
 

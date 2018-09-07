@@ -9,8 +9,8 @@
 
 (defun gh-auth-set-credentials (username password)
   (interactive (list
-		(read-string "Input your github username: ")
-		(read-passwd "Input your github password: " t)))
+    (read-string "Input your github username: ")
+    (read-passwd "Input your github password: " t)))
   (if (shell-command (concat "git config --global github.user " username " && git config --global github.password " password))
       (message "Github user added")
     (message "Failed to add Github user")))
@@ -30,3 +30,5 @@
 ;; github-notifier.el
 ;; magit-gh-pulls.el
 ;; yagist
+
+;;; rc-git.el ends here

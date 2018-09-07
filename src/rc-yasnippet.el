@@ -50,7 +50,7 @@
 (yas-reload-all)
 
 ;; do not bind yasnippet to TAB key. Bind it to C-TAB
-(define-key yas-minor-mode-map (kbd "<C-M-tab>") 'yas-ido-expand)
+;; (define-key yas-minor-mode-map (kbd "<C-M-tab>") 'yas-ido-expand)
 (define-key yas-minor-mode-map (kbd "<tab>") nil)
 (global-set-key (kbd "<C-tab>") 'company-yasnippet)
 
@@ -58,31 +58,31 @@
   (font-lock-mode 1))
 
 ;; Completing point by some yasnippet key
-(defun yas-ido-expand ()
-  "Let you select (and expand) a yasnippet key."
-  (interactive)
-  (let ((original-point (point)))
-    (while (and
-	    (not (= (point) (point-min) ))
-	    (not
-	     (string-match "[[:space:]\n]" (char-to-string (char-before)))))
-      (backward-word 1))
-    (let* ((init-word (point))
-	   (word (buffer-substring init-word original-point))
-	   (list (yas-active-keys)))
-      (goto-char original-point)
-      (let ((key (remove-if-not
-		  (lambda (s) (string-match (concat "^" word) s)) list)))
-	(if (= (length key) 1)
-	    (setq key (pop key))
-	  (setq key (ido-completing-read "key: " list nil nil word)))
-	(delete-char (- init-word original-point))
-	(insert key)
-	(yas-expand)))))
+;; (defun yas-ido-expand ()
+;;   "Let you select (and expand) a yasnippet key."
+;;   (interactive)
+;;   (let ((original-point (point)))
+;;     (while (and
+;;       (not (= (point) (point-min) ))
+;;       (not
+;;        (string-match "[[:space:]\n]" (char-to-string (char-before)))))
+;;       (backward-word 1))
+;;     (let* ((init-word (point))
+;;      (word (buffer-substring init-word original-point))
+;;      (list (yas-active-keys)))
+;;       (goto-char original-point)
+;;       (let ((key (remove-if-not
+;;       (lambda (s) (string-match (concat "^" word) s)) list)))
+;;   (if (= (length key) 1)
+;;       (setq key (pop key))
+;;     (setq key (ido-completing-read "key: " list nil nil word)))
+;;   (delete-char (- init-word original-point))
+;;   (insert key)
+;;   (yas-expand)))))
 
 ;; do not activate yas in term
 (add-hook 'term-mode-hook (lambda()
-			    (setq yas-dont-activate-functions t)))
+          (setq yas-dont-activate-functions t)))
 
 ;;;
 ;;; yas-minor-mode

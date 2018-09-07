@@ -856,12 +856,12 @@
 ;;; Advanced buffer options
 ;;;
 (add-to-list 'menu-bar-buffers-menu-command-entries
-	     '(rename-buffer menu-item "Rename Current Buffer" rename-buffer :help "Rename Current Buffer"))
+       '(rename-buffer menu-item "Rename Current Buffer" rename-buffer :help "Rename Current Buffer"))
 
 (add-to-list 'menu-bar-buffers-menu-command-entries
-	     '(cosmonaut/new-empty-buffer menu-item "Create Empty Buffer" cosmonaut/new-empty-buffer :help "Create Empty Buffer"))
+       '(cosmonaut/new-empty-buffer menu-item "Create Empty Buffer" cosmonaut/new-empty-buffer :help "Create Empty Buffer"))
 
 (add-to-list 'menu-bar-buffers-menu-command-entries
-	     '(command-separator-1 "--"))
+       '(command-separator-1 "--"))
 
 ;;; cosmonaut-menubar.el ends here

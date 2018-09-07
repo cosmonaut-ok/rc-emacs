@@ -46,7 +46,8 @@
  '(ede-project-placeholder-cache-file (locate-user-cache-file "cosmonaut-ede-projects.el"))
  '(semanticdb-default-save-directory (locate-user-cache-file "cosmonaut-semanticdb"))
  '(srecode-map-save-file (locate-user-cache-file "cosmonaut-srecode-map.el"))
- '(ido-save-directory-list-file (locate-user-cache-file "ido.last")))
+ ;; '(ido-save-directory-list-file (locate-user-cache-file "ido.last"))
+ )
 
 ;; create custom file if it does not exists
 (unless (file-exists-p custom-file)

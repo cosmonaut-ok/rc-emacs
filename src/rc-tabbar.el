@@ -35,8 +35,8 @@
  dired buffers), and the rest.  This works at least with Emacs v24.2 using
  tabbar.el v1.7."
   (list (cond ((string-equal "*" (substring (buffer-name) 0 1)) "emacs")
-	      ((eq major-mode 'dired-mode) "emacs")
-	      (t "user"))))
+        ((eq major-mode 'dired-mode) "emacs")
+        (t "user"))))
 (setq tabbar-buffer-groups-function 'cosmonaut/tabbar-buffer-groups)
 (set-face-attribute
  'tabbar-default nil
@@ -79,17 +79,17 @@
   "Return a label for TAB.
 That is, a string used to represent it on the tab bar."
   (let ((label  (if tabbar--buffer-show-groups
-		    (format "[%s]  " (tabbar-tab-tabset tab))
-		  (format "%s  " (tabbar-tab-value tab)))))
+        (format "[%s]  " (tabbar-tab-tabset tab))
+      (format "%s  " (tabbar-tab-value tab)))))
     ;; Unless the tab bar auto scrolls to keep the selected tab
     ;; visible, shorten the tab label to keep as many tabs as possible
     ;; in the visible area of the tab bar.
     (if tabbar-auto-scroll-flag
-	label
+  label
       (tabbar-shorten
        label (max 1 (/ (window-width)
-		       (length (tabbar-view
-				(tabbar-current-tabset)))))))))
+           (length (tabbar-view
+        (tabbar-current-tabset)))))))))
 
 
 ;;; cosmonaut-tabbar.el ends here

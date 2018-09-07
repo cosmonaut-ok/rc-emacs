@@ -31,12 +31,12 @@
   "Choose from a list of choices from a popup menu.
 See `popup-commands' which calls this"
   (let ((item)
-	(item-list))
+  (item-list))
     (while menu-items
       (setq item (car menu-items))
       (if (consp item)
-	  (setq item-list (cons (cons (car item) (cdr item) ) item-list))
-	(setq item-list (cons (cons item item) item-list)))
+    (setq item-list (cons (cons (car item) (cdr item) ) item-list))
+  (setq item-list (cons (cons item item) item-list)))
       (setq menu-items (cdr menu-items))
       )
 
@@ -70,7 +70,7 @@ See `popup-commands' which calls this"
        (cons "Search [C-s-1]" (cons "zzz" "(call-interactively 'search-forward)"))
        (cons "-" "")
        (cons "Open buffer in new frame (WM window) [C-x 5 2]"
-	     "(make-frame-command)")
+       "(make-frame-command)")
        (cons "Hide buffer [C-x 0]"  "(delete-window)")
        (cons "-" "")
        (cons "-" "")

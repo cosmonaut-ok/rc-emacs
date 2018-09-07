@@ -28,14 +28,14 @@
 ;;; Code:
 
 ;; (defvar cosmonaut/source-directory (file-name-directory load-file-name))
-(defvar cosmonaut/source-directory (file-name-directory load-file-name))
+(defvar cosmonaut/source-directory (file-name-directory (directory-file-name (file-name-directory load-file-name))))
 (defvar cosmonaut/packages-installed-p (concat cosmonaut/source-directory "el-get/.installed-p"))
 (defvar cosmonaut/elget-user-recipes-path (concat cosmonaut/source-directory "el-get-user/recipes"))
 (defvar cosmonaut/do-bootstrap t)
 (defvar cosmonaut/el-get-force-reinit nil)
 
 (setq user-emacs-directory cosmonaut/source-directory)
-  
+
 (defvar *el-get-packages-list*
   '(
     ;; libraries and frameworks
@@ -48,6 +48,7 @@
     "deferred"
     "emacs-async"
     "ht"
+    "highlight-symbol"
     ;; ruby
     "ruby-mode"
     "enh-ruby-mode"
@@ -62,9 +63,10 @@
     "yari"
     "bundler"
     ;; python
+    "python"
     "python-mode"
     "pymacs"
-    "python-virtualenv"
+    "python-environment"
     "company-jedi"
     "autopair"
     ;; "rspec-mode" ;; moved to scripts
@@ -97,6 +99,22 @@
     "web-mode"
     "web-completion-data"
     "mmm-mode"
+    ;; helm
+    "helm"
+    "helm-bibtex"
+    "helm-c-yasnippet"
+    "helm-company"
+    "helm-dictionary"
+    "helm-gtags"
+    "helm-ipython"
+    "helm-projectile"
+    "helm-pydoc"
+    "helm-robe"
+    "helm-shell"
+    "helm-shell-history"
+    "helm-themes"
+    ;; "helm-slime" ;; FIXME: failed to install
+    "org-linkany" ;; insert link using anything.el/helm.el on org-mode.
     ;; other
     "ecb"
     "sr-speedbar"
@@ -105,7 +123,6 @@
     ;; "magit-gh-pulls" moved to scripts
     "fill-column-indicator"
     "highlight-parentheses"
-    "highlight-symbol"
     "col-highlight"
     "flycheck"
     "flycheck-pos-tip"
@@ -113,7 +130,7 @@
     "tabbar"
     "yasnippet"
     "yasnippets"
-    ;; "yasnippet-snippets" ;; yasnippet/snippets are the same
+    "yasnippet-snippets" ;; yasnippet/snippets are the same
     "projectile"
     "ido-ubiquitous" ;; needed for magit
     "ido-hacks"

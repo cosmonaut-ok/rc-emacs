@@ -31,7 +31,7 @@
   (interactive)
   (let ((version "0.3.0")) ;; autoconf-anchor
     (if short
-	(princ version)
+  (princ version)
       (princ (concat "Cosmonaut Chef IDE version: " version ".\nBuild with Emacs version:\n" (emacs-version) "\n")))))
 
 (define-colored-compilation-mode selfdeps-installation-mode "Installing Cosmonaut required dependencies")
@@ -43,13 +43,13 @@
    (remove 'bundle-install-selfdeps compilation-finish-functions)) ; ``delete'' is not working properly sometimes
   (if (or (null result) (string-match "^finished" result))
       (progn
-	(cd cosmonaut/source-directory)
-	(compile
-	 (concat
-	  ". "
-	  (expand-file-name "~/.rvm/scripts/rvm") ;; init required env. variables before start
-	  "; bundle install ")
-	 'selfdeps-installation-mode))
+  (cd cosmonaut/source-directory)
+  (compile
+   (concat
+    ". "
+    (expand-file-name "~/.rvm/scripts/rvm") ;; init required env. variables before start
+    "; bundle install ")
+   'selfdeps-installation-mode))
     (error "RVM installation failed. Can not continue.")))
 
 (defun startup-wizard (ruby-version)
@@ -62,11 +62,11 @@
 ;; (defun show-md-doc-page (name)
 ;;   (let ((file-pathname (locate-source-file name)))
 ;;     (if (file-exists-p file-pathname)
-;; 	(let ((the-buffer (find-file-read-only file-pathname))
-;; 	      (browse-url-browser-function 'xwidget-webkit-browse-url))
-;; 	  (with-current-buffer the-buffer
-;; 	    (markdown-preview)
-;; 	    (kill-buffer the-buffer)))
+;;  (let ((the-buffer (find-file-read-only file-pathname))
+;;        (browse-url-browser-function 'xwidget-webkit-browse-url))
+;;    (with-current-buffer the-buffer
+;;      (markdown-preview)
+;;      (kill-buffer the-buffer)))
 ;;       (error "No such file %s. Check your installation consistency" name))))
 
 
@@ -86,4 +86,49 @@
   (interactive)
   (show-md-doc-page "Installation"))
 
-;;; cosmonaut-help.el ends here
+(defun cosmonaut/keybindings ()
+  (interactive)
+  (let ((msg
+         (concat "Key   Description\n"
+                 "___   ____________\n"
+                 "\n"
+                 "F3    Berks install/update\n"
+                 "C-F3    Rvm use ruby@gem\n"
+                 "S-F3    Bundle install/update\n"
+                 "\n"
+                 "F5    Check project with foodcritic\n"
+                 "S-F5    Check current file with foodcritic\n"
+                 "\n"
+                 "F6    Check project with rubocop/cookstyle\n"
+                 "S-F6    Check current file with rubocop/cookstyle\n"
+                 "\n"
+                 "F8    Run rspec/chefspec on project\n"
+                 "C-F8    rspec/chefspec only on current file\n"
+                 "C-S-F8  rspec/chefspec only on current line\n"
+                 "\n"
+                 "C-S-F9  Run `kitchen verify` with single VM\n"
+                 "S-F9    Run `kitchen verify` with all VMs\n"
+                 "F9    Run kitchen converge on single VM\n"
+                 "C-F9    Run kitchen converge` on all VMs\n"
+                 "\n"
+                 "F11   Fullscreen editor\n"
+                 "C-F11 Show/hide compile window\n"
+                 "\n"
+                 "F12   Open unix shell\n"
+                 "C-F12 Open ruby shell with IRB/PRY\n"
+                 "C-S-F12 Open native emacs shell\n"
+                 "\n"
+                 "F7/C-s  Search\n"
+                 "S-F7    Highlight phrase\n"
+                 "C-S-F7  Unhighlight phrase of regexp\n"
+                 "M-F7  Search in whole project\n"
+                 "\n"
+                 "C-x C-s Save current file\n"
+                 "C-x s Save all unsaved opened files\n"
+                 )))
+    (message-box msg)
+    ))
+
+(global-set-key (kbd "<S-f1>") 'cosmonaut/keybindings)
+
+;;; rc-help.el ends here

@@ -265,10 +265,15 @@
   :group 'cosmonaut/ruby
   )
 
-(defcustom cosmonaut/rvm-default-gemset "global"
-  "Default rvm default gemset."
-  :type 'string
-  :group 'cosmonaut/ruby
+(let ((f (locate-source-file "etc/rc.conf")))
+  (defcustom cosmonaut/rvm-default-gemset (or
+              (and
+               (file-exists-p f)
+               (get-value-by-key-from-file "GEMSET_NAME" f))
+              "global")
+    "Default rvm default gemset."
+    :type 'string
+    :group 'cosmonaut/ruby)
   )
 
 (defcustom cosmonaut/enable-rubocop t

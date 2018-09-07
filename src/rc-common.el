@@ -164,33 +164,52 @@
       display-time-day-and-date t)
 (display-time)
 
-;;;; ido
-;; https://github.com/magnars/.emacs.d/blob/master/settings/setup-ido.el
-(require 'ido)
-(require 'ido-vertical-mode)
-(require 'ido-completing-read+)
-;;
-(ido-mode 1)
-(ido-vertical-mode 1)
-(ido-better-flex/enable)
+(require 'helm-config)
+(require 'helm-grep)
+(require 'helm-themes)
 
-(custom-set-variables
- '(ido-vertical-show-count t)
- '(ido-enable-flex-matching t)
- '(ido-vertical-define-keys 'C-n-C-p-up-and-down)
- )
+;; To fix error at compile:
+;; Error (bytecomp): Forgot to expand macro with-helm-buffer in
+;; (with-helm-buffer helm-echo-input-in-header-line)
+(if (version< "26.0.50" emacs-version)
+    (eval-when-compile (require 'helm-lib)))
 
-(global-set-key "\M-x" (lambda ()
-       (interactive)
-       (call-interactively (intern (ido-completing-read
-                  "M-x " (all-completions "" obarray 'commandp))))))
+(global-set-key (kbd "M-x") 'helm-M-x)
+(global-set-key (kbd "C-x r b") #'helm-filtered-bookmarks)
+(global-set-key (kbd "C-x C-f") #'helm-find-files)
+(global-set-key (kbd "M-y") 'helm-show-kill-ring)
+
+(helm-mode 1)
+;; (helm-linum-relative-mode 1)
+
+;; ;;;; ido
+;; ;; https://github.com/magnars/.emacs.d/blob/master/settings/setup-ido.el
+;; (require 'ido)
+;; (require 'ido-vertical-mode)
+;; (require 'ido-completing-read+)
+;; ;;
+;; (ido-mode 1)
+;; (ido-vertical-mode 1)
+;; (ido-better-flex/enable)
+
+;; (custom-set-variables
+;;  '(ido-vertical-show-count t)
+;;  '(ido-enable-flex-matching t)
+;;  '(ido-vertical-define-keys 'C-n-C-p-up-and-down)
+;;  )
+
+;; (global-set-key "\M-x" (lambda ()
+;;        (interactive)
+;;        (call-interactively (intern (ido-completing-read
+;;                   "M-x " (all-completions "" obarray 'commandp))))))
+
 ;; set key to enable whitespace mode
 (global-set-key (kbd "C-c w") 'whitespace-mode)
 (global-set-key (kbd "C-c C-w") 'whitespace-mode)
 
-;; set ido-completing-read as default completing function
-(setq ido-cr+-replace-completely t)
-(setq-default completing-read-function 'ido-completing-read)
+;; ;; set ido-completing-read as default completing function
+;; (setq ido-cr+-replace-completely t)
+;; (setq-default completing-read-function 'ido-completing-read)
 
 ;;;; If we read a compressed file, uncompress it on the fly:
 ;;;; (this works with .tar.gz and .tgz file as well)
@@ -231,7 +250,7 @@
   ;; projectile
   (require 'projectile)
   ;; magit
-  (setq magit-completing-read-function 'magit-ido-completing-read)
+  ;; (setq magit-completing-read-function 'magit-ido-completing-read)
   ;;
   (subword-mode 1)
   (font-lock-mode 1)
@@ -344,6 +363,10 @@
 ;;;
 (require 'projectile)
 (projectile-global-mode 1)
+;; use helm with projectile
+(helm-projectile-on)
+(setq projectile-completion-system 'helm)
+(setq projectile-indexing-method 'alien)
 
 ;;;
 ;;; require-final-newline
@@ -423,13 +446,5 @@
         week))
   (message "%s" file)
   (delete-file file)))))
-
-(defhooklet cosmonaut/rename-scratch-buffer after-change-major-mode t
-  ;; Rename scratch buffer
-  (if (and (get-buffer "*scratch*") (not (get-buffer "scratch")))
-      (with-current-buffer "*scratch*"
-  (rename-buffer "*cutting-board*")
-  ;;
-  (insert (propertize initial-scratch-message)))))
 
 ;;; cosmonaut-common.el ends here

@@ -50,18 +50,18 @@
   (interactive "sWhich ruby do you want to install?: ")
   (let ((installator (locate-user-cache-file ".rvm.sh")))
     (progn (gpg-install-key rvm-installation-key)
-	   (download-file rvm-installation-url installator)
-	   (compile
-	    (concat
-	     "/bin/bash "
-	     installator
-	     " stable"
-	     " --ruby="
-	     ruby
-	     " --auto-dotfiles"
-	     (when cosmonaut/enable-bundler
-	       " --gems=bundler"))
-	    'rvm-installation-mode))))
+     (download-file rvm-installation-url installator)
+     (compile
+      (concat
+       "/bin/bash "
+       installator
+       " stable"
+       " --ruby="
+       ruby
+       " --auto-dotfiles"
+       (when cosmonaut/enable-bundler
+         " --gems=bundler"))
+      'rvm-installation-mode))))
 
 (defun rvm-install-ruby (ruby)
   (interactive "sWhich ruby do you want to install?: ")
@@ -86,16 +86,16 @@
   "switch the current ruby version to any ruby, which is installed with rvm and use it as default"
   (interactive
    (let* ((picked-ruby (rvm--completing-read "Ruby Version: "
-					     (rvm/list)))
-	  (picked-gemset (rvm--completing-read "Gemset: "
-					       (rvm/gemset-list picked-ruby))))
+               (rvm/list)))
+    (picked-gemset (rvm--completing-read "Gemset: "
+                 (rvm/gemset-list picked-ruby))))
      (list picked-ruby picked-gemset)))
   (when (rvm-working-p)
     (let* ((new-ruby-with-gemset (rvm--ruby-gemset-string new-ruby new-gemset))
-	   (ruby-info (rvm/info new-ruby-with-gemset))
-	   (new-ruby-binary (cdr (assoc "ruby" ruby-info)))
-	   (new-ruby-gemhome (cdr (assoc "GEM_HOME" ruby-info)))
-	   (new-ruby-gempath (cdr (assoc "GEM_PATH" ruby-info))))
+     (ruby-info (rvm/info new-ruby-with-gemset))
+     (new-ruby-binary (cdr (assoc "ruby" ruby-info)))
+     (new-ruby-gemhome (cdr (assoc "GEM_HOME" ruby-info)))
+     (new-ruby-gempath (cdr (assoc "GEM_PATH" ruby-info))))
       (setq rvm--current-ruby new-ruby)
       (setq rvm--current-gemset new-gemset)
       (setq rvm--gemset-default new-gemset)

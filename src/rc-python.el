@@ -1,6 +1,7 @@
-
-
 (require 'python-mode)
+
+;; fix unexpected emacs behavior with "//" in pathname
+(setq-default py-install-directory (replace-regexp-in-string "\\/$" "" py-install-directory))
 
 ;; ; use IPython
 (setq-default py-shell-name "jupyter")
@@ -49,3 +50,4 @@
 (defhooklet cosmonaut/python-company python-mode t
   (company-mode 1)
   (add-to-list 'company-backends 'company-jedi))
+

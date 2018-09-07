@@ -135,6 +135,7 @@
     "mysql_service"
 
     "nfs_export"
+    "node"
     "nvm_install"
 
     "ohai"
@@ -264,7 +265,7 @@ See URL `http://acrmp.github.io/foodcritic/'."
 (defhooklet cosmonaut/imenu-replace chef-mode t
   (setq imenu-generic-expression
         '(("Ruby structures" "^\\( *\\(def\\|class\\|module\\) +.+\\)" 1)
-          ("Actions and Resources" "^\\( *\\([a-zA-Z][a-zA-Z0-9]\\).+ +.+do\\)" 1)
+          ("Actions and Resources" "^\\( *\\([a-zA-Z][a-zA-Z0-9]\\).+ +.+do$\\)" 1)
           ("Included Receipes" "^\\( *\\(include_recipe\\) +.+\\)" 1)
           ))
   (setq imenu-create-index-function 'imenu-default-create-index-function)
@@ -358,4 +359,5 @@ See URL `http://acrmp.github.io/foodcritic/'."
 
 (defhooklet cosmonaut/bundler-switcher prog-mode t
   (cosmonaut-bundler-switch))
+
 ;;; cosmonaut-chef.el ends here
