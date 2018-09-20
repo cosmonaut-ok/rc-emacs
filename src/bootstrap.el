@@ -113,6 +113,7 @@
     "helm-shell"
     "helm-shell-history"
     "helm-themes"
+    "helm-swoop"
     ;; "helm-slime" ;; FIXME: failed to install
     "org-linkany" ;; insert link using anything.el/helm.el on org-mode.
     ;; other
