@@ -99,6 +99,10 @@
     "web-mode"
     "web-completion-data"
     "mmm-mode"
+    ;; terraform
+    "terraform-mode"
+    ;; docker
+    "dockerfile-mode"
     ;; helm
     "helm"
     "helm-bibtex"
