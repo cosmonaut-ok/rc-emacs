@@ -9,7 +9,7 @@ else
 fi
 
 SCRIPT_HOME="$(dirname `realpath $0`)"
-REQUIRED_PACKAGES="git vagrant sbcl emacs,emacs24,emacs aspell texlive-full texlive-lang-cyrillic"
+REQUIRED_PACKAGES="git vagrant sbcl emacs,emacs25,emacs aspell texlive-full texlive-lang-cyrillic"
 
 print_message()
 {
