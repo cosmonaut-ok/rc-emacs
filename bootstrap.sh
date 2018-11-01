@@ -2,7 +2,7 @@
 
 set -e
 
-if [ -n $1 ]; then
+if [ ! -z $1 ]; then
     RUBY_VERSION=$1
 else
     RUBY_VERSION=2.2
