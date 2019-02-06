@@ -94,6 +94,8 @@
     "cdlatex-mode"
     "company-auctex"
     "latex-preview-pane"
+    "zotelo"
+    "company-math"
     ;; xml
     ;; web
     "web-mode"

@@ -62,6 +62,7 @@
   (ecb-deactivate) ;; we don't need a ECB when editing tex/latex files
   (outline-minor-mode 1)
   (yas-minor-mode 1)
+
   (define-key yas-minor-mode-map [C-tab] 'yas-expand)
   (define-key yas-minor-mode-map [tab] nil)
 
@@ -69,6 +70,7 @@
   (define-key LaTeX-mode-map [f8] 'TeX-command-master)
 
   (company-auctex-init)
+  (company-mode 1)
   ;; (latex-preview-pane-mode 1)
 
   (setq project-auctex-styles (concat (file-name-directory (buffer-file-name)) "style/"))

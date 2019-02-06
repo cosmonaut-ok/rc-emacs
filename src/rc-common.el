@@ -73,13 +73,13 @@
 ;;;; enable cua mode
 (defhooklet cosmonaut/cua-mode emacs-startup cosmonaut/familiar-copy-paste-cut
   ;; https://www.emacswiki.org/emacs/CuaMode
-  (cua-mode t))
+  (cua-mode nil))
 
 (defhooklet cosmonaut/cua-mode text-mode cosmonaut/familiar-copy-paste-cut
-  (cua-mode t))
+  (cua-mode nil))
 
 (defhooklet cosmonaut/cua-mode prog-mode cosmonaut/familiar-copy-paste-cut
-  (cua-mode t))
+  (cua-mode nil))
 
 (custom-set-variables
 ;;;; Sync linux and eamcs clipboards
