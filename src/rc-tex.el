@@ -7,15 +7,6 @@
 ;; Requirements:
 ;; Status: not intended to be distributed yet
 
-;;(load "~/.emacs.d/share/auctex/auctex.el" nil t t)
-;;(load "~/.emacs.d/share/auctex/preview/preview-latex.el" nil t t)
-
-;; (autoload 'tex-math-preview "tex-math-preview" nil t)
-
-;; (setenv "TEXINPUTS"
-;;         (concat (getenv "TEXINPUTS")
-;;                 ":/home/ott/tex/styles//:/home/ott/projects/fprog/journal-issues/class//"))
-
 ;;; Code:
 
 (autoload 'TeX-load-hack
@@ -30,32 +21,33 @@
 
 ;; (require 'flymake)
 
-;; (autoload 'cdlatex-mode "cdlatex" "CDLaTeX Mode" t)
-;; (autoload 'turn-on-cdlatex "cdlatex" "CDLaTeX Mode" nil)
-;; (turn-on-cdlatex)
-
 (autoload 'tex-math-preview "tex-math-preview" nil t)
 
 (defvar system-auctex-styles (locate-source-file "el-get/auctex/style/"))
 (defvar local-auctex-styles (locate-source-file "style/"))
 (defvar project-auctex-styles nil)
 
-  ;; create auto lisp directory
-  (dolist (v (append TeX-auto-private TeX-style-private))
-    (when (not (file-directory-p v))
-      (mkdir v t)))
+(autoload 'cdlatex-mode "cdlatex" "CDLaTeX Mode" t)
+(autoload 'turn-on-cdlatex "cdlatex" "CDLaTeX Mode" nil)
 
-  (add-to-list 'latex-templates-private
-               (locate-source-file "lib/latex-templates/templates/"))
+;; create auto lisp directory
+(dolist (v (append TeX-auto-private TeX-style-private))
+  (when (not (file-directory-p v))
+    (mkdir v t)))
 
-  ;; add custom templates
-  (add-to-list 'latex-templates-private
-               (locate-source-file "latex-templates/"))
+(add-to-list 'latex-templates-private
+	     (locate-source-file "lib/latex-templates/templates/"))
+
+;; add custom templates
+(add-to-list 'latex-templates-private
+	     (locate-source-file "latex-templates/"))
 
 (defhooklet cosmonaut/texlatex (tex-mode latex-mode LaTeX-mode) t
   ;; (local-unset-key (kbd "<tab>"))
   ;; (local-unset-key (kbd "TAB"))
   ;; (local-set-key "<tab>" 'cdlatex-tab)
+  
+  (turn-on-cdlatex)
 
   ;; (flymake-mode 1)
   (font-lock-mode 1) ;; does not needed, as implemented in prog-mode
@@ -156,3 +148,5 @@
 
 ;; (add-hook 'LaTeX-mode-hook #'LaTeX-preview-setup)
 ;; (add-hook 'laTeX-mode-hook #'LaTeX-preview-setup)
+
+(add-auto-mode 'LaTeX-mode "\\.tex\\'")
