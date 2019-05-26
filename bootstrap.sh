@@ -2,14 +2,14 @@
 
 set -e
 
-if [ -n $1 ]; then
+if [ ! -z $1 ]; then
     RUBY_VERSION=$1
 else
     RUBY_VERSION=2.2
 fi
 
 SCRIPT_HOME="$(dirname `realpath $0`)"
-REQUIRED_PACKAGES="git vagrant sbcl emacs,emacs24,emacs aspell texlive-full texlive-lang-cyrillic"
+REQUIRED_PACKAGES="git vagrant sbcl emacs,emacs25,emacs aspell texlive-full texlive-lang-cyrillic"
 
 print_message()
 {

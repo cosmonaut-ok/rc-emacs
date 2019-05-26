@@ -95,11 +95,17 @@
     "cdlatex-mode"
     "company-auctex"
     "latex-preview-pane"
+    "zotelo"
+    "company-math"
     ;; xml
     ;; web
     "web-mode"
     "web-completion-data"
     "mmm-mode"
+    ;; terraform
+    "terraform-mode"
+    ;; docker
+    "dockerfile-mode"
     ;; helm
     "helm"
     "helm-bibtex"
@@ -114,6 +120,7 @@
     "helm-shell"
     "helm-shell-history"
     "helm-themes"
+    "helm-swoop"
     ;; "helm-slime" ;; FIXME: failed to install
     "org-linkany" ;; insert link using anything.el/helm.el on org-mode.
     ;; other
