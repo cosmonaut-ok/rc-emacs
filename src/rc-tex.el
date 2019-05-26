@@ -114,6 +114,7 @@
   ;; (turn-on-bib-cite)
   ;; (setq bib-cite-use-reftex-view-crossref t)
   ;; (cosmonaut/TeX-keymap)
+  (ezbf-minor-mode)
   )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
