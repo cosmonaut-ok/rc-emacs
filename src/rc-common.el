@@ -486,6 +486,12 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;;;
+;;; initialize el-get
+;;;
+(require 'el-get)
+(el-get)
+
+;;;
 ;;; initialize package
 ;;;
 (require 'package)
