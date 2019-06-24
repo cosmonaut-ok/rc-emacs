@@ -1,11 +1,4 @@
 ;; check if ruby installed
-
-;; Added by Package.el.  This must come before configurations of
-;; installed packages.  Don't delete this line.  If you don't want it,
-;; just comment it out by adding a semicolon to the start of the line.
-;; You may delete these explanatory comments.
-(package-initialize)
-
 (when (not (call-process "which" nil nil nil "ruby"))
   (warn "WARNING! There is no ruby in system. Extended ruby/chef features are not supported"))
 
@@ -33,6 +26,12 @@
 (load (locate-source-file "src/bootstrap.el"))
 (require 'el-get)
 (el-get)
+
+;; Added by Package.el.  This must come before configurations of
+;; installed packages.  Don't delete this line.  If you don't want it,
+;; just comment it out by adding a semicolon to the start of the line.
+;; You may delete these explanatory comments.
+(package-initialize)
 
 ;; set init and custom file
 (mkdir cosmonaut/user-config-directory t)
