@@ -64,11 +64,12 @@
     "bundler"
     ;; python
     "python"
-    "python-mode"
+    ;; "python-mode"
     "pymacs"
     "python-environment"
     "company-jedi"
     "autopair"
+    "ein" ;; emacs jupyter notebook support
     ;; "rspec-mode" ;; moved to scripts
     ;; completion
     "company-mode"
