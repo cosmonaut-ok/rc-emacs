@@ -22,6 +22,12 @@
 ;; (require 'flymake)
 
 (autoload 'tex-math-preview "tex-math-preview" nil t)
+(autoload 'latex-math-preview-expression "latex-math-preview" nil t)
+(autoload 'latex-math-preview-insert-symbol "latex-math-preview" nil t)
+(autoload 'latex-math-preview-save-image-file "latex-math-preview" nil t)
+(autoload 'latex-math-preview-beamer-frame "latex-math-preview" nil t)
+
+(require 'emacs-zotero-bib-fetch)
 
 (defvar system-auctex-styles (locate-source-file "el-get/auctex/style/"))
 (defvar local-auctex-styles (locate-source-file "style/"))
@@ -42,7 +48,7 @@
 (add-to-list 'latex-templates-private
 	     (locate-source-file "latex-templates/"))
 
-(defhooklet cosmonaut/texlatex (tex-mode latex-mode LaTeX-mode) t
+(defhooklet cosmonaut/texlatex (latex-mode LaTeX-mode) t
   ;; (local-unset-key (kbd "<tab>"))
   ;; (local-unset-key (kbd "TAB"))
   ;; (local-set-key "<tab>" 'cdlatex-tab)
@@ -61,8 +67,11 @@
   (define-key LaTeX-mode-map [f5] 'TeX-command-run-all)
   (define-key LaTeX-mode-map [f8] 'TeX-command-master)
 
-  (company-auctex-init)
+  (define-key latex-mode-map [f5] 'TeX-command-run-all)
+  (define-key latex-mode-map [f8] 'TeX-command-master)
+
   (company-mode 1)
+  (company-auctex-init)
   ;; (latex-preview-pane-mode 1)
 
   (setq project-auctex-styles (concat (file-name-directory (buffer-file-name)) "style/"))
@@ -102,28 +111,29 @@
       project-auctex-styles))
    '(outline-minor-mode-prefix "\C-c \C-o") ; Or something else
    )
-
-  (flyspell-mode 1)
-  (flyspell-buffer)
   ;; (turn-on-bib-cite)
   ;; (setq bib-cite-use-reftex-view-crossref t)
   ;; (cosmonaut/TeX-keymap)
   (ezbf-minor-mode)
+
+  (flyspell-mode 1)
+  (flyspell-buffer)
   )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;; USING reftex-mode: https://www.gnu.org/software/auctex/manual/reftex/RefTeX-in-a-Nutshell.html#RefTeX-in-a-Nutshell
-;; (autoload 'reftex-mode "reftex" "RefTeX Minor Mode" t)
-;; (setq reftex-plug-into-AUCTeX t)
-;; (autoload 'turn-on-reftex "reftex" "RefTeX Minor Mode" nil)
-;; (autoload 'reftex-citation "reftex-cite" "Make citation" nil)
-;; (autoload 'reftex-index-phrase-mode "reftex-index" "Phrase Mode" t)
-;; (autoload 'turn-on-bib-cite "bib-cite")
-;; (add-hook 'latex-mode-hook 'turn-on-reftex) ; with Emacs latex mode
-;; ;; (add-hook 'reftex-load-hook 'imenu-add-menubar-index)
-;; (add-hook 'LaTeX-mode-hook 'turn-on-reftex)
+(autoload 'reftex-mode "reftex" "RefTeX Minor Mode" t)
+(setq reftex-plug-into-AUCTeX t)
+(autoload 'turn-on-reftex "reftex" "RefTeX Minor Mode" nil)
+(autoload 'reftex-citation "reftex-cite" "Make citation" nil)
+(autoload 'reftex-index-phrase-mode "reftex-index" "Phrase Mode" t)
+(autoload 'turn-on-bib-cite "bib-cite")
+(add-hook 'reftex-load-hook 'imenu-add-menubar-index)
+(add-hook 'reftex-mode-hook 'imenu-add-menubar-index)
 
+;; Make C-u prefixed commands not re-parse entire doc.
+(setq reftex-enable-partial-scans t)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defhooklet cosmonaut/texinfo-hook texinfo-mode t
@@ -150,4 +160,4 @@
 ;; (add-hook 'LaTeX-mode-hook #'LaTeX-preview-setup)
 ;; (add-hook 'laTeX-mode-hook #'LaTeX-preview-setup)
 
-(add-auto-mode 'LaTeX-mode "\\.tex\\'")
+(add-auto-mode 'latex-mode "\\.tex\\'")

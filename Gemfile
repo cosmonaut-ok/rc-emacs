@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-gem 'rubocop', '= 0.41.0'
+gem 'rubocop', '= 0.49.0'
 gem 'berkshelf', '~> 3.2.0'
 gem 'chef'
 gem 'knife-solo', '~> 0.4.0'
@@ -10,7 +10,7 @@ gem 'test-kitchen', '~> 1.2.0'
 gem 'chefspec', '~> 4.0.0'
 gem 'serverspec', '~> 2.0.0'
 gem 'rake', '~> 10.4.0'
-gem 'rack', '~> 1.5.0'
+gem 'rack', '~> 1.6.11'
 gem 'rspec', '~> 3.0.0'
 gem 'pry', '~> 0.10.3'
 gem 'pry-doc', '>= 0.8.0', require: false, platforms: :mri
